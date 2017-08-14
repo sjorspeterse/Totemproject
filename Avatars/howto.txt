@@ -1,0 +1,11 @@
+1. Maken in: https://www.pixilart.com/draw
+
+2. Opslaan als .pixil en als .png
+
+3. Open .png in: https://pixlr.com/editor/
+
+4. Opslaan als .bmp
+
+5. Open .bmp in LCD Assistant
+
+6. Conve
