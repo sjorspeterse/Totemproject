@@ -8,11 +8,11 @@
 #include "totem.h"
 
 LCD5110 lcd(7,6,5,3,4); //Creating LCD object
-Player Thomas = Player("Thomas");
-Player Iris = Player("Iris");
-Player Celine = Player("Celine");
-Player Wiebke = Player("Wiebke");
-Player Sjors = Player("Sjors");
+Player Thomas = Player("Thomas", &lcd);
+Player Iris = Player("Iris", &lcd);
+Player Celine = Player("Celine", &lcd);
+Player Wiebke = Player("Wiebke", &lcd);
+Player Sjors = Player("Sjors", &lcd);
 Player *player_list[5];
  
 
@@ -31,83 +31,81 @@ void setup() {
 void loop() {
   int acceleratex[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
   const int yoffset[] = {41, 40, 38, 35, 31, 26 ,20, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 8, 11, 15, 20, 26, 31, 35, 38, 40, 41};
+  
   int middlelocx = 42-17;
 
-  unsigned char black [] PROGMEM= {0xd0, 0xff, 0xff, 0x0f, 0xff, 0xff, 0x0f, 0xff,};
+ /* 
+  lcd.getBuffer(10, 10, bitmap, 13, 19);
+  lcd.drawBitmapDynamic(40, 0, bitmap, 13, 19);
+  lcd.update();*/
 
   lcd.clrScr();
-  
-  uint8_t bitmap[AVATAR_WIDTH*AVATAR_HEIGHT/8];
-  //uint8_t bitmap[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,};
+  int x = 20;
+  int y = -4;
 
-  lcd.drawBitmap(0, 0, WIEBKE_AVATAR, AVATAR_WIDTH, AVATAR_HEIGHT);
-  lcd.getBuffer(0, 0, bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
-  lcd.drawBitmapDynamic(40, 0, bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
-  lcd.update();
+ 
+  //Sjors.avatar->draw(20,0);
+  //Sjors.avatar->action();
 
-  
-  /*for (uint8_t i = 0; i < 0xff; i++) {
-    lcd.clrScr();
-    bitmap[0] = i;
-    lcd.drawBitmapDynamic(0, 0, bitmap, 8, 8);
-    //Serial.print("Real: ");
-    //Serial.print(bitmap[0]);
-    lcd.getBuffer(0, 0, bitmap, 8, 8);
-    //Serial.print(" Copied: ");
-    //Serial.println(bitmap[0]);
-    lcd.drawBitmapDynamic(40, 0, bitmap, 8, 8); 
-    lcd.update(); //Updating the LCD
-    //Serial.print("scrbuf[0] = ");
-    uint8_t data = lcd.getByte(0);
-    //Serial.println(data);
-    //Serial.print("After: bitmap[0] = ");
-    //Serial.println(bitmap[0]);
+  //lcd.drawBitmap(x, y, SJORS_AVATAR, AVATAR_WIDTH, AVATAR_HEIGHT);
 
-    if(lcd.getPixel(0, 0)) 
-      {
-        Serial.print("True,  bitmap[0 + (0/8)*1] before = ");
-        Serial.print( bitmap[0 + (0/8)*1]);
-        Serial.print(", 1<<0 = ");
-        Serial.print(1<<0);
-        Serial.print(", bitmap[0 + (0/8)*1] | (1<<0) = ");
-        Serial.print(bitmap[0 + (0/8)*1] | (1<<0));
-        bitmap[0 + (0/8)*1] |= (1<<0);
-        Serial.print(",  bitmap[0 + (0/8)*1] after = ");
-        Serial.println( bitmap[0 + (0/8)*1]);
-      }
-      else{
-        Serial.print("False,  bitmap[0 + (0/8)*1] before = ");
-        Serial.print( bitmap[0 + (0/8)*1]);
-        Serial.print(", ~(1<<0) = ");
-        Serial.print(~(1<<0));
-        Serial.print(", bitmap[cx + (cy/8)*sx] & ~(1<<0) = ");
-        Serial.print(bitmap[0 + (0/8)*1] & ~(1<<0));
-        bitmap[0 + (0/8)*1] &= !(1<<0);
-        Serial.print(",  bitmap[0 + (0/8)*1] after = ");
-        Serial.println( bitmap[0 + (0/8)*1]); 
-      }
 
-    
-    
+  /*for(int i = 0; i<5; i++)
+  {
+    lcd.drawBitmap(x + SJORS_ACTION_OFFSETX, y + SJORS_ACTION_OFFSETY, SJORS_ACTION[i], SJORS_ACTION_WIDTH, SJORS_ACTION_HEIGHT);
+    lcd.update();
     delay(100);
-  }*/
+  } */
+
   
-  
-  //Serial.println(lcd.getPixel(5,0));
-  /*
+/*
+  lcd.drawBitmap(x + SJORS_ACTION_OFFSETX, y + SJORS_ACTION_OFFSETY, sjors_action1, SJORS_ACTION_WIDTH, SJORS_ACTION_HEIGHT);
+  lcd.update();
+  delay(100);
+
+  lcd.drawBitmap(x + SJORS_ACTION_OFFSETX, y + SJORS_ACTION_OFFSETY, sjors_action2, SJORS_ACTION_WIDTH, SJORS_ACTION_HEIGHT);
+  lcd.update();
+  delay(100);
+
+  lcd.drawBitmap(x + SJORS_ACTION_OFFSETX, y + SJORS_ACTION_OFFSETY, sjors_action3, SJORS_ACTION_WIDTH, SJORS_ACTION_HEIGHT);
+  lcd.update();
+  delay(100);
+
+  lcd.drawBitmap(x + SJORS_ACTION_OFFSETX, y + SJORS_ACTION_OFFSETY, sjors_action4, SJORS_ACTION_WIDTH, SJORS_ACTION_HEIGHT);
+  lcd.update();
+  delay(100);
+  */
+
+  //lcd->drawBitmap(x, y, _bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
+
+  Avatar *leftmost, *left, *center, *right, *rightmost;
+
   for (int nr = 0; nr < 5; nr++) {
     middlelocx = 42-17;
     for(int i = 0; i <11; i++){
-      lcd.clrScr(); //Clearing screen     
-      lcd.drawBitmap(middlelocx - 36 , -yoffset[33 + i], player_list[nr%5]->avatar, AVATAR_HOR, AVATAR_VERT); //Left figure
-      lcd.drawBitmap(middlelocx, -yoffset[22 + i], player_list[(nr+1)%5]->avatar, AVATAR_HOR, AVATAR_VERT); //Middle figure
-      lcd.drawBitmap(middlelocx + 36, -yoffset[11 + i], player_list[(nr+2)%5]->avatar, AVATAR_HOR, AVATAR_VERT); //Right figure
-      lcd.drawBitmap(middlelocx + 2*36, -yoffset[i], player_list[(nr+3)%5]->avatar, AVATAR_HOR, AVATAR_VERT); //Rightmost figure 
-      lcd.update(); //Updating the LCD 
+      leftmost = player_list[nr%5]->avatar;
+      left = player_list[(nr+1)%5]->avatar;
+      center = player_list[(nr+2)%5]->avatar;
+      right = player_list[(nr+3)%5]->avatar;
+      rightmost = player_list[(nr+4)%5]->avatar;
+
+      lcd.clrScr();
+      left->draw(middlelocx - 36 , -yoffset[33 + i]); //Left figure
+      center->draw(middlelocx, -yoffset[22 + i]); //Middle figure
+      right->draw(middlelocx + 36, -yoffset[11 + i]); //Right figure
+      rightmost->draw(middlelocx + 2*36, -yoffset[i]); //Rightmost figure
+      lcd.update();
+
       middlelocx -= acceleratex[i];
       delay(30);   
     }
+    right->action();
+    right->look(EYES_LEFT);
+    right->look(EYES_RIGHT);
+    right->look(EYES_UP);
+    right->look(EYES_DOWN);
+
     delay(1000);
-  }*/
+  }
 
 }

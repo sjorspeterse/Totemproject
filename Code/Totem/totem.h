@@ -1,5 +1,6 @@
 #ifndef totem_h
 #define totem_h
+#include "LCD5110_Graph.h"
 
 class Player;
 class Avatar;
@@ -8,8 +9,7 @@ class Player
 {
  public:
    char* naam;
-   Player( char* naam);
-   // const unsigned char* avatar; 
+   Player( char* naam, LCD5110* lcd);
    Avatar* avatar;
 
 };
@@ -19,17 +19,20 @@ class Player
 class Avatar
 {
 public:
-  Avatar( char* naam);
+  Avatar(char* naam, LCD5110* lcd);
 	void action();
 	void erase();
 	void draw(int x, int y);
-
+	void look(int direction);
+	
+	
 private:
 	unsigned char* _bitmap;
 	unsigned char* _background;
 	int _locx;
 	int _locy;
-	bool _isdrawn;
+	bool _notdrawn;
+	LCD5110* _lcd;
 };
 
 

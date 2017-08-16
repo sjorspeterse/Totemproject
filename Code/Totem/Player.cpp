@@ -1,11 +1,13 @@
 #include "Arduino.h"
 //#include "avatars.h"
 #include "totem.h"
+#include "LCD5110_Graph.h"
 
-Player::Player(char* naam)
+Player::Player(char* naam, LCD5110* lcd)
 {
    this->naam = naam;
-   this->avatar = new Avatar(naam);
+   this->avatar = new Avatar(naam, lcd);
+
    /*if(strcmp(naam, "Celine")==0){
       this->avatar = CELINE_AVATAR;
    } else if(strcmp(naam, "Iris")==0){
