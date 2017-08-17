@@ -17,19 +17,24 @@ Player *player_list[5];
  
 
 void setup() {
-  lcd.InitLCD(); //Intializing LCD
-  Serial.begin(9600);
-
-  player_list[0] = &Iris;
-  player_list[1] = &Thomas;
-  player_list[2] = &Wiebke;
-  player_list[3] = &Celine;
-  player_list[4] = &Sjors;
+	Serial.begin(9600);
+  	Serial.println("In setup");
+  	lcd.InitLCD(); //Intializing LCD
+  	Serial.println("Initilized LCD");
+  
+	player_list[0] = &Iris;
+	player_list[1] = &Thomas;
+	player_list[2] = &Wiebke;
+	player_list[3] = &Celine;
+	player_list[4] = &Sjors;
   
 }
 
-void loop() {
-  Game game(player_list, &lcd);
-  game.demoAll();
-
+void loop() { 
+	delay(200);
+	Serial.println("Beginning of loop");
+	//delay(2000);
+  	MineSweeper ms = MineSweeper(player_list, &lcd);
+  	Serial.println ("Created MineSweeper object!");
+  	ms.start();
 }

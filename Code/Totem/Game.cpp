@@ -8,7 +8,14 @@ Game::Game(Player **player_list, LCD5110* lcd)
 	this->player_list = player_list;
 }
 
+
 void Game::demoAll() {
+
+	/**********************************
+	// demoAll usage:				 //
+	// Game game(player_list, &lcd); //
+  	// game.demoAll();				 //
+	**********************************/
 
 	/****************************************
 	// Demo Avatar select, action and eyes //
@@ -61,4 +68,72 @@ void Game::demoAll() {
   	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
   	lcd->update();
   	delay(1000);
+}
+
+MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd): Game(player_list, lcd)
+{
+	Serial.println("MineSweeper constructor");
+	for(int col = 0; col<9; col++) {
+		for(int row=0; row<9; row++) {
+			//Serial.print("row = ");
+			//Serial.println(row);
+			_field[row][col] = new Tile(col, row, lcd);  // TODO: DEZE OOK WEER VRIJMAKEN!!""
+		}
+	}
+	Serial.print("Created all the Tiles. _col and _row of _field[5][6] are ");
+	Serial.print(_field[5][6]->_col);
+	Serial.print(" and ");
+	Serial.println(_field[5][6]->_row);
+
+	Tile* tile;
+	for(int col = 0; col<9; col++) {
+		for(int row=0; row<9; row++) {
+			tile = _field[row][col];
+			tile->neighbour[RIGHT] 			= (col<8) 			? _field[row][col+1] : NULL;
+			tile->neighbour[LEFT] 			= (col>0) 			? _field[row][col-1] : NULL;
+			tile->neighbour[TOP] 			= (row>0) 			? _field[row-1][col] : NULL;
+			tile->neighbour[BOTTOM] 		= (row<8) 			? _field[row+1][col] : NULL;
+			tile->neighbour[TOPRIGHT] 		= (col<8 && row>0) 	? _field[row-1][col+1] : NULL;
+			tile->neighbour[TOPLEFT] 		= (col>0 && row>0) 	? _field[row-1][col-1] : NULL;
+			tile->neighbour[BOTTOMRIGHT]	= (col<8 && row<8) 	? _field[row+1][col+1] : NULL;
+			tile->neighbour[BOTTOMLEFT] 	= (col>0 && row<8) 	? _field[row+1][col-1] : NULL;
+		}
+	}
+	Serial.println("connected Tiles together");
+	Serial.print("Check: 2 = ");
+	Serial.println(_field[0][0]->neighbour[RIGHT]->neighbour[BOTTOMRIGHT]->_col);
+	
+}
+
+void MineSweeper::start() {
+	Serial.println("Starting MineSweeper");
+	lcd->clrScr();
+	for(int col = 0; col<9; col++) {
+		for(int row = 0; row<9; row++) {
+			_field[row][col]->draw();
+		}
+	}
+	
+	lcd->drawBitmap(50,0, WIEBKE_AVATAR, AVATAR_WIDTH, AVATAR_HEIGHT);
+	lcd->update();
+	delay(1000);
+}
+
+Tile::Tile(int col, int row, LCD5110* lcd)
+{
+	//Serial.print("tile ");
+	this->isBomb = false;
+	this->value = UNDISCOVERED;
+	this->_col = col;
+	this->_row = row;
+	this->_bitmap = UNDISCOVERED_BITMAP;
+	this->lcd = lcd;
+}
+
+void Tile::draw(){
+	/*Serial.print("drawing! col = ");
+	Serial.print(_col);
+	Serial.print(", row = ");
+	Serial.println(_row);*/
+	lcd->drawBitmap(2+ 5*_col, 2+ 5*_row, _bitmap, 4, 4);
 }
