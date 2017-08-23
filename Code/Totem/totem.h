@@ -58,6 +58,7 @@ class Game
 		Player *curPlayer;
 
 		Game(Player **player_list, LCD5110* lcd, Player *curPlayer);
+		virtual int get_input() = 0;
 		void demoAll();
 
 	private:
@@ -66,6 +67,8 @@ class Game
 class MineSweeper: public Game
 {
 	public:
+		enum {left, right, up, down, flag, open, none};
+
 		MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer);
 		Tile** setup();
 		void start();
@@ -73,6 +76,8 @@ class MineSweeper: public Game
 		void drawCursor();
 		void eraseCursor();
 		void moveCursor(int input);
+		virtual int get_input() override;
+
 	private:
 		Tile* _curTile;
 		Tile* _field[9][9];
@@ -110,7 +115,7 @@ class Button
 };
 
 int free_ram();
-int get_input();
+int get_hardware_input();
 
 #endif
 

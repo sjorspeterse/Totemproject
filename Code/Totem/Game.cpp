@@ -9,14 +9,13 @@ Game::Game(Player **player_list, LCD5110* lcd, Player *curPlayer)
 	this->curPlayer = curPlayer;
 }
 
-
 void Game::demoAll() {
 
-	/**********************************
-	// demoAll usage:				 //
-	// Game game(player_list, &lcd); //
-  	// game.demoAll();				 //
-	**********************************/
+	/*******************************************
+	// demoAll usage:				          //
+	// Game game(player_list, &lcd, &Wiebke); //
+  	// game.demoAll();				          //
+	*******************************************/
 
 	/****************************************
 	// Demo Avatar select, action and eyes //
@@ -101,6 +100,22 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer):
 	
 }
 
+int MineSweeper::get_input() {
+	int buttonPressed = get_hardware_input();
+
+    switch(buttonPressed) {
+	    case Button::left : return MineSweeper::left;
+	    case Button::right : return MineSweeper::right;
+	    case Button::up : return MineSweeper::up;
+	    case Button::down : return MineSweeper::down;
+	    case Button::one : 
+	    case Button::ok : return MineSweeper::flag;
+	    case Button::two : return MineSweeper::open;
+	    case Button::three : 
+	    case Button::four : return MineSweeper::none;
+	}
+}
+
 void MineSweeper::start() {
 	Serial.println("Starting MineSweeper");
 	lcd->clrScr();
@@ -122,8 +137,8 @@ void MineSweeper::start() {
 	lcd->update();
 
 	int input = get_input();
-	while(input != Button::two){
-		if(input == Button::ok) {
+	while(input != MineSweeper::open){
+		if(input == MineSweeper::flag) {
 			_curTile->toggleFlag();
 		}
 		else{
@@ -139,16 +154,16 @@ void MineSweeper::start() {
 
 	while(true) {
 		switch(input) {
-			case Button::left:
-			case Button::right:
-			case Button::up:
-			case Button::down:
+			case MineSweeper::left:
+			case MineSweeper::right:
+			case MineSweeper::up:
+			case MineSweeper::down:
 				moveCursor(input);
 				break;
-			case Button::ok:
+			case MineSweeper::flag:
 				_curTile->toggleFlag();
 				break;
-			case Button::two:
+			case MineSweeper::open:
 				_curTile->open();
 				curPlayer->avatar->action();
 				break;
@@ -172,19 +187,19 @@ void MineSweeper::start() {
 void MineSweeper::moveCursor(int input) {
 	eraseCursor();
 	switch(input) {
-		case Button::left: 
+		case MineSweeper::left: 
 			if(_cursorCol > 0) _cursorCol--;
 			curPlayer->avatar->look(EYES_LEFT);
 			break;
-		case Button::right: 
+		case MineSweeper::right: 
 			if(_cursorCol < 8) _cursorCol++;
 			curPlayer->avatar->look(EYES_RIGHT);
 			break;
-		case Button::up: 
+		case MineSweeper::up: 
 			if(_cursorRow > 0) _cursorRow--;
 			curPlayer->avatar->look(EYES_UP);
 			break;
-		case Button::down: 
+		case MineSweeper::down: 
 			if(_cursorRow < 8) _cursorRow++;
 			curPlayer->avatar->look(EYES_DOWN);
 			break;

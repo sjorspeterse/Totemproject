@@ -34,11 +34,12 @@ void setup() {
 
 void loop() { 
 
-	Game game(player_list, &lcd, &Wiebke); //
-  	game.demoAll();
-  	/*MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
+	/*MineSweeper game(player_list, &lcd, &Wiebke); //
+  	game.demoAll();*/
+
+  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
   	Serial.println ("Created MineSweeper object!");
-  	ms.start();*/
+  	ms.start();
 }
 
 int free_ram () 
@@ -48,7 +49,7 @@ int free_ram ()
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
-int get_input(){
+int get_hardware_input(){
 	while (Serial.available() == 0) /* wait for input */ ;	
 	char c = Serial.read();
 	switch(c) {
