@@ -31,5 +31,8 @@ const unsigned char EIGHT_BITMAP [] PROGMEM= {
 const unsigned char NINE_BITMAP [] PROGMEM= {
 0x00, 0x0B, 0x0B, 0x0F};
 
-const unsigned char FLAG_BITMAP [] PROGMEM= {
+const unsigned char BOMB_BITMAP [] PROGMEM= {
 0x09, 0x06, 0x06, 0x09};
+
+const unsigned char FLAG_BITMAP [] PROGMEM= {
+0x0F, 0x03, 0x03, 0x03};

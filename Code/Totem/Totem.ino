@@ -33,12 +33,12 @@ void setup() {
 }
 
 void loop() { 
-	delay(200);
-	Serial.println("Beginning of loop");
-	//delay(2000);
-  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
+
+	Game game(player_list, &lcd, &Wiebke); //
+  	game.demoAll();
+  	/*MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
   	Serial.println ("Created MineSweeper object!");
-  	ms.start();
+  	ms.start();*/
 }
 
 int free_ram () 
@@ -51,16 +51,15 @@ int free_ram ()
 int get_input(){
 	while (Serial.available() == 0) /* wait for input */ ;	
 	char c = Serial.read();
-	Serial.println(c);
 	switch(c) {
-	    case 'l' : return LEFT;
-	    case 'r' : return RIGHT;
-	    case 'u' : return UP;
-	    case 'd' : return DOWN;
-	    case '1' : return BUTTON1;
-	    case '2' : return BUTTON2;
-	    case '3' : return BUTTON3;
-	    case '4' : return BUTTON4;
-	    case 'o' : return OK;
+	    case 'l' : return Button::left;
+	    case 'r' : return Button::right;
+	    case 'u' : return Button::up;
+	    case 'd' : return Button::down;
+	    case '1' : return Button::one;
+	    case '2' : return Button::two;
+	    case '3' : return Button::three;
+	    case '4' : return Button::four;
+	    case 'o' : return Button::ok;
 	}
 }

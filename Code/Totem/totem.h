@@ -4,24 +4,11 @@
 #include "graphics.h"
 
 // General Purpose
-#define BUTTON1 1
-#define BUTTON2 2 
-#define BUTTON3 3
-#define BUTTON4 4
-#define OK 5
-#define UP 2
-#define DOWN 3
+//enum button 
+enum dir{up, down, left, right};
 
 // Minesweeper
 #define UNDISCOVERED -1
-#define LEFT 0
-#define RIGHT 1
-#define TOP 2
-#define BOTTOM 3
-#define TOPLEFT 4
-#define TOPRIGHT 5
-#define BOTTOMLEFT 6
-#define BOTTOMRIGHT 7
 
 
 
@@ -30,6 +17,7 @@ class Avatar;
 class Game;
 class MineSweeper;
 class Tile;
+class Button;
 
 class Player
 {
@@ -85,35 +73,40 @@ class MineSweeper: public Game
 		void drawCursor();
 		void eraseCursor();
 		void moveCursor(int input);
-
 	private:
-		Tile* curTile;
+		Tile* _curTile;
 		Tile* _field[9][9];
 		int _cursorCol;
-		int _cursorRow;
-
-		
+		int _cursorRow;		
 };
 
 class Tile
 {
 	public:
 		bool isBomb;
+		bool flag;
+		enum {top, bottom, left, right, topleft, topright, bottomleft, bottomright};
 		int value;
+		unsigned char* bitmap;	
 		Tile* neighbour[8];
-		LCD5110 *lcd;
+		LCD5110 *lcd;		
+
 		Tile(int col, int row, LCD5110* lcd);
 		void draw();
 		int bombNeighbours();
-		void open();	
+		void open();
+		void toggleFlag();
 
 	private:
 		int _col;
 		int _row;
-		unsigned char* _bitmap;
 		
-		
-		
+};
+
+class Button
+{
+	public:
+		enum {one, two, three, four, ok, up, down, left, right};
 };
 
 int free_ram();

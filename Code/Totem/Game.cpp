@@ -81,20 +81,20 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer):
 			_field[row][col] = new Tile(col, row, lcd);  // TODO: DEZE OOK WEER VRIJMAKEN!!""
 		}
 	}
-	this->curTile = _field[_cursorRow][_cursorCol];
+	this->_curTile = _field[_cursorRow][_cursorCol];
 
 	Tile* tile;
 	for(int col = 0; col<9; col++) {
 		for(int row=0; row<9; row++) {
 			tile = _field[row][col];
-			tile->neighbour[RIGHT] 			= (col<8) 			? _field[row][col+1] : NULL;
-			tile->neighbour[LEFT] 			= (col>0) 			? _field[row][col-1] : NULL;
-			tile->neighbour[TOP] 			= (row>0) 			? _field[row-1][col] : NULL;
-			tile->neighbour[BOTTOM] 		= (row<8) 			? _field[row+1][col] : NULL;
-			tile->neighbour[TOPRIGHT] 		= (col<8 && row>0) 	? _field[row-1][col+1] : NULL;
-			tile->neighbour[TOPLEFT] 		= (col>0 && row>0) 	? _field[row-1][col-1] : NULL;
-			tile->neighbour[BOTTOMRIGHT]	= (col<8 && row<8) 	? _field[row+1][col+1] : NULL;
-			tile->neighbour[BOTTOMLEFT] 	= (col>0 && row<8) 	? _field[row+1][col-1] : NULL;
+			tile->neighbour[Tile::right] 		= (col<8) 			? _field[row][col+1] : NULL;
+			tile->neighbour[Tile::left] 		= (col>0) 			? _field[row][col-1] : NULL;
+			tile->neighbour[Tile::top] 			= (row>0) 			? _field[row-1][col] : NULL;
+			tile->neighbour[Tile::bottom]		= (row<8) 			? _field[row+1][col] : NULL;
+			tile->neighbour[Tile::topright] 	= (col<8 && row>0) 	? _field[row-1][col+1] : NULL;
+			tile->neighbour[Tile::topleft] 		= (col>0 && row>0) 	? _field[row-1][col-1] : NULL;
+			tile->neighbour[Tile::bottomright]	= (col<8 && row<8) 	? _field[row+1][col+1] : NULL;
+			tile->neighbour[Tile::bottomleft] 	= (col>0 && row<8) 	? _field[row+1][col-1] : NULL;
 		}
 	}
 	Serial.println("connected Tiles together");
@@ -104,35 +104,55 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer):
 void MineSweeper::start() {
 	Serial.println("Starting MineSweeper");
 	lcd->clrScr();
+
+	// drawing the field
 	for(int col = 0; col<9; col++) {
 		for(int row = 0; row<9; row++) {
 			_field[row][col]->draw();
 		}
 	}
 	
+	// drawing the player
 	curPlayer->avatar->draw(50,0);
+
+	//drawing the cursor
 	drawCursor();
+
+	//displaying everything
 	lcd->update();
 
 	int input = get_input();
-	while(input != OK){
-		moveCursor(input);
+	while(input != Button::two){
+		if(input == Button::ok) {
+			_curTile->toggleFlag();
+		}
+		else{
+			moveCursor(input);
+		}
+		
 		lcd->update();
 		input = get_input();
 	}
 	generate();
+	_curTile->open();
+	curPlayer->avatar->action();
+
 	while(true) {
 		switch(input) {
-			case LEFT:
-			case RIGHT:
-			case UP:
-			case DOWN:
+			case Button::left:
+			case Button::right:
+			case Button::up:
+			case Button::down:
 				moveCursor(input);
 				break;
-			case OK:
-				curTile->open();
+			case Button::ok:
+				_curTile->toggleFlag();
+				break;
+			case Button::two:
+				_curTile->open();
 				curPlayer->avatar->action();
 				break;
+			lcd->update();
 		}
 		
 		lcd->update();
@@ -152,46 +172,49 @@ void MineSweeper::start() {
 void MineSweeper::moveCursor(int input) {
 	eraseCursor();
 	switch(input) {
-		case LEFT: 
+		case Button::left: 
 			if(_cursorCol > 0) _cursorCol--;
 			curPlayer->avatar->look(EYES_LEFT);
 			break;
-		case RIGHT: 
+		case Button::right: 
 			if(_cursorCol < 8) _cursorCol++;
 			curPlayer->avatar->look(EYES_RIGHT);
 			break;
-		case UP: 
+		case Button::up: 
 			if(_cursorRow > 0) _cursorRow--;
 			curPlayer->avatar->look(EYES_UP);
 			break;
-		case DOWN: 
+		case Button::down: 
 			if(_cursorRow < 8) _cursorRow++;
 			curPlayer->avatar->look(EYES_DOWN);
 			break;
 		}
-	curTile = _field[_cursorRow][_cursorCol];
+	_curTile = _field[_cursorRow][_cursorCol];
 	drawCursor();
 }
 
 void MineSweeper::drawCursor() {
-	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
+	/*lcd->setPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
 	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow); // top right
 	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1)); // bottom left
-	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right
+	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right*/
+	lcd->drawRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
 }
 
 void MineSweeper::eraseCursor() {
-	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
+	/*lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
 	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow); // top right
 	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1)); // bottom left
-	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right
+	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right*/
+
+	lcd->clrRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
 }
 
 void MineSweeper::generate() {
-	START:  //goto label
 	int bombs_placed = 0;
 	Tile *tile;
-	while(bombs_placed <= 10) {
+	while(bombs_placed < 10) {
+		START:  //goto label
 		int row = random(9);
 		int col = random(9);
 		tile = _field[row][col];
@@ -221,70 +244,17 @@ void MineSweeper::generate() {
 		bombs_placed++;
 	}
 	Serial.println("Bombs placed!");
-}
 
-
-Tile::Tile(int col, int row, LCD5110* lcd)
-{
-	this->isBomb = false;
-	this->value = UNDISCOVERED;
-	this->_col = col;
-	this->_row = row;
-	this->_bitmap = UNDISCOVERED_BITMAP;
-	this->lcd = lcd;
-}
-
-void Tile::draw(){
-	lcd->drawBitmap(2+ 5*_col, 2+ 5*_row, _bitmap, 4, 4);
-}
-
-void Tile::open() {
-	if(isBomb)
-		Serial.println("You died");
-	value = bombNeighbours(); 
-	switch(value){
-		case 0:
-			_bitmap = EMPTY_BITMAP;
-			for(int i=0; i<9; i++) 
-				if(neighbour[i]->value == UNDISCOVERED)
-					neighbour[i]->open();
-			break;
-		case 1:
-			_bitmap = ONE_BITMAP;
-			break;
-		case 2:
-			_bitmap = TWO_BITMAP;
-			break;
-		case 3:
-			_bitmap = THREE_BITMAP;
-			break;
-		case 4:
-			_bitmap = FOUR_BITMAP;
-			break;
-		case 5:
-			_bitmap = FIVE_BITMAP;
-			break;
-		case 6:
-			_bitmap = SIX_BITMAP;
-			break;
-		case 7:
-			_bitmap = SEVEN_BITMAP;
-			break;
-		case 8:
-			_bitmap = EIGHT_BITMAP;
-			break;
-	}
-	draw();
-}
-
-int Tile::bombNeighbours(){
-	int bombs = 0;
-	Tile *tile;
-	for(int i = 0; i<8; i++)
-	{
-		tile = neighbour[i];
-		if (tile != NULL && tile->isBomb)
-			bombs++;
-	}
-	return bombs;
+	///// vanaf hier is test
+	/*for(int r = 0; r<9; r++)
+			for(int c = 0; c<9; c++){
+				Tile *tile = _field[r][c];
+				if(tile->isBomb){
+					tile->bitmap = FLAG_BITMAP;
+					tile->draw();
+				}
+				else{
+					tile->open();
+				}
+			}*/
 }
