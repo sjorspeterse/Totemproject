@@ -70,8 +70,7 @@ void Game::demoAll() {
   	delay(1000);
 }
 
-MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer)
-{
+MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer){
 	this->_cursorCol = 4;
 	this->_cursorRow = 4;
 	for(int col = 0; col<9; col++) {
@@ -96,8 +95,7 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer):
 			tile->neighbour[Tile::bottomleft] 	= (col>0 && row<8) 	? _field[row+1][col-1] : NULL;
 		}
 	}
-	Serial.println("connected Tiles together");
-	
+	Serial.println("connected Tiles together");	
 }
 
 int MineSweeper::get_input() {
@@ -108,12 +106,38 @@ int MineSweeper::get_input() {
 	    case Button::right : return MineSweeper::right;
 	    case Button::up : return MineSweeper::up;
 	    case Button::down : return MineSweeper::down;
-	    case Button::one : 
-	    case Button::ok : return MineSweeper::flag;
+	    case Button::ok : 
+	    	if(_curTile->value == UNDISCOVERED) 
+	    		return MineSweeper::flag;
+	    	else 
+	    		return MineSweeper::openNumber;
+	    case Button::one : return MineSweeper::flag;
 	    case Button::two : return MineSweeper::open;
-	    case Button::three : 
+	    case Button::three : return MineSweeper::openNumber;
 	    case Button::four : return MineSweeper::none;
 	}
+}
+
+void MineSweeper::handle_input(int input) {
+	switch(input) {
+		case MineSweeper::left:
+		case MineSweeper::right:
+		case MineSweeper::up:
+		case MineSweeper::down:
+			moveCursor(input);
+			break;
+		case MineSweeper::flag:
+			_curTile->toggleFlag();
+			break;
+		case MineSweeper::open:
+			_curTile->open();
+			curPlayer->avatar->action();
+			break;
+		case MineSweeper::openNumber:
+			if(_curTile->value != UNDISCOVERED)
+				_curTile->open_number();
+			break;
+		}
 }
 
 void MineSweeper::start() {
@@ -130,50 +154,31 @@ void MineSweeper::start() {
 	// drawing the player
 	curPlayer->avatar->draw(50,0);
 
-	//drawing the cursor
+	// drawing the cursor
 	drawCursor();
 
-	//displaying everything
+	// displaying everything
 	lcd->update();
 
+	// wait until a field is opened
 	int input = get_input();
 	while(input != MineSweeper::open){
-		if(input == MineSweeper::flag) {
-			_curTile->toggleFlag();
-		}
-		else{
-			moveCursor(input);
-		}
-		
+		handle_input(input);
 		lcd->update();
 		input = get_input();
 	}
-	generate();
+
+	// then generate the bombs and open the tiles
+	generate_bombs();
 	_curTile->open();
 	curPlayer->avatar->action();
 
-	while(true) {
-		switch(input) {
-			case MineSweeper::left:
-			case MineSweeper::right:
-			case MineSweeper::up:
-			case MineSweeper::down:
-				moveCursor(input);
-				break;
-			case MineSweeper::flag:
-				_curTile->toggleFlag();
-				break;
-			case MineSweeper::open:
-				_curTile->open();
-				curPlayer->avatar->action();
-				break;
-			lcd->update();
-		}
-		
+	// main Minesweeper loop
+	while(true) {	
+		handle_input(input);
 		lcd->update();
 		input = get_input();
 	}
-
 
 	Serial.println("Game done, clearing up memory");
 	// clearing up the memory
@@ -225,7 +230,7 @@ void MineSweeper::eraseCursor() {
 	lcd->clrRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
 }
 
-void MineSweeper::generate() {
+void MineSweeper::generate_bombs() {
 	int bombs_placed = 0;
 	Tile *tile;
 	while(bombs_placed < 10) {
@@ -234,42 +239,15 @@ void MineSweeper::generate() {
 		int col = random(9);
 		tile = _field[row][col];
 		if(tile->isBomb) {
-			Serial.print("(");
-			Serial.print(row);
-			Serial.print(",");
-			Serial.print(col);
-			Serial.println(") discarded because it already has a bomb.");
 			continue; // already a bomb 
 		}
 		for(int r = row-1; r<=row+1; r++)
 			for(int c = col-1; c<=col+1; c++)
 				if(r == _cursorRow && c == _cursorCol){
-					Serial.print("(");
-					Serial.print(row);
-					Serial.print(",");
-					Serial.print(col);
-					Serial.print(") discarded because it is neighbouring (");
-					Serial.print(_cursorCol);
-					Serial.print(",");
-					Serial.print(_cursorCol);
-					Serial.println(").");
 					goto START; // initial square should have 0 ajacent bombs 
 				}
 		tile->isBomb = true;
 		bombs_placed++;
 	}
 	Serial.println("Bombs placed!");
-
-	///// vanaf hier is test
-	/*for(int r = 0; r<9; r++)
-			for(int c = 0; c<9; c++){
-				Tile *tile = _field[r][c];
-				if(tile->isBomb){
-					tile->bitmap = FLAG_BITMAP;
-					tile->draw();
-				}
-				else{
-					tile->open();
-				}
-			}*/
 }

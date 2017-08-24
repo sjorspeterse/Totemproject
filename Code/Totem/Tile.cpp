@@ -26,7 +26,7 @@ void Tile::open() {
 	switch(value){
 		case 0:
 			bitmap = EMPTY_BITMAP;
-			for(int i=0; i<9; i++) 
+			for(int i=0; i<8; i++) 
 				if(neighbour[i]->value == UNDISCOVERED)
 					neighbour[i]->open();
 			break;
@@ -58,6 +58,28 @@ void Tile::open() {
 	draw();
 }
 
+void Tile::open_number() {
+	int surrounding_flags = 0;
+	Tile *tile;
+
+	for(int i = 0; i<8; i++){
+		tile = neighbour[i];
+		if (tile != NULL && tile->flag) {
+			surrounding_flags++;
+		}
+	}
+
+	if(surrounding_flags == value) {
+		for(int i = 0; i<8; i++){
+			tile = neighbour[i];
+			if (tile != NULL && tile->value == UNDISCOVERED && tile->flag == false) {
+				tile->open();
+			}
+		}
+	}
+
+}
+
 int Tile::bombNeighbours(){
 	int bombs = 0;
 	Tile *tile;
@@ -81,4 +103,18 @@ void Tile::toggleFlag() {
 		flag = true;
 	}
 	draw();
+}
+
+void Tile::print() {
+	Serial.print("Tile((");
+	Serial.print(_row);
+	Serial.print(",");
+	Serial.print(_col);
+	Serial.print("), isBomb = ");
+	Serial.print(isBomb);
+	Serial.print(", flag = ");
+	Serial.print(flag);
+	Serial.print(", value = ");
+	Serial.print(value);
+	Serial.println(")");
 }
