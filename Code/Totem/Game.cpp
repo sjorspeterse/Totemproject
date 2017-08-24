@@ -118,7 +118,8 @@ int MineSweeper::get_input() {
 	}
 }
 
-void MineSweeper::handle_input(int input) {
+int MineSweeper::handle_input(int input) {
+	int status = Tile::success;
 	switch(input) {
 		case MineSweeper::left:
 		case MineSweeper::right:
@@ -130,14 +131,15 @@ void MineSweeper::handle_input(int input) {
 			_curTile->toggleFlag();
 			break;
 		case MineSweeper::open:
-			_curTile->open();
+			status = _curTile->open();
 			curPlayer->avatar->action();
 			break;
 		case MineSweeper::openNumber:
 			if(_curTile->value != UNDISCOVERED)
-				_curTile->open_number();
+				status = _curTile->open_number();
 			break;
 		}
+	return status;
 }
 
 void MineSweeper::start() {
@@ -174,8 +176,11 @@ void MineSweeper::start() {
 	curPlayer->avatar->action();
 
 	// main Minesweeper loop
-	while(true) {	
-		handle_input(input);
+	int status = Tile::success;
+	while(status == Tile::success) {	
+		status = handle_input(input);
+		if( won() )
+			break;
 		lcd->update();
 		input = get_input();
 	}
@@ -250,4 +255,17 @@ void MineSweeper::generate_bombs() {
 		bombs_placed++;
 	}
 	Serial.println("Bombs placed!");
+}
+
+bool MineSweeper::won() {
+	Tile *tile;
+	for(int row=0; row<9; row++) {
+		for(int col=0; col<9; col++) {
+			tile = _field[row][col];
+			if(tile->isBomb == false && tile->value == UNDISCOVERED) {
+				return false;
+			}
+		}
+	}
+	return true;
 }

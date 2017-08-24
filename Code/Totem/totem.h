@@ -59,7 +59,7 @@ class Game
 
 		Game(Player **player_list, LCD5110* lcd, Player *curPlayer);
 		virtual int get_input() = 0;
-		virtual void handle_input(int input) = 0;
+		virtual int handle_input(int input) = 0;
 		void demoAll();
 
 	private:
@@ -77,8 +77,9 @@ class MineSweeper: public Game
 		void drawCursor();
 		void eraseCursor();
 		void moveCursor(int input);
+		bool won();
 		virtual int get_input() override;
-		virtual void handle_input(int input) override;
+		virtual int handle_input(int input) override;
 
 	private:
 		Tile* _curTile;
@@ -93,6 +94,7 @@ class Tile
 		bool isBomb;
 		bool flag;
 		enum {top, bottom, left, right, topleft, topright, bottomleft, bottomright};
+		enum {died, success};
 		int value;
 		unsigned char* bitmap;	
 		Tile* neighbour[8];
@@ -101,8 +103,8 @@ class Tile
 		Tile(int col, int row, LCD5110* lcd);
 		void draw();
 		int bombNeighbours();
-		void open();
-		void open_number();
+		int open();
+		int open_number();
 		void toggleFlag();
 		void print();
 

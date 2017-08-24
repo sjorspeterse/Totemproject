@@ -15,12 +15,12 @@ void Tile::draw(){
 	lcd->drawBitmap(2+ 5*_col, 2+ 5*_row, bitmap, 4, 4);
 }
 
-void Tile::open() {
+int Tile::open() {
 	if(isBomb){
 		Serial.println("You died");
 		bitmap = BOMB_BITMAP;
 		draw();
-		return;
+		return Tile::died;
 	}
 	value = bombNeighbours(); 
 	switch(value){
@@ -56,10 +56,12 @@ void Tile::open() {
 			break;
 	}
 	draw();
+	return Tile::success;
 }
 
-void Tile::open_number() {
+int Tile::open_number() {
 	int surrounding_flags = 0;
+	int status = Tile::success;
 	Tile *tile;
 
 	for(int i = 0; i<8; i++){
@@ -73,11 +75,12 @@ void Tile::open_number() {
 		for(int i = 0; i<8; i++){
 			tile = neighbour[i];
 			if (tile != NULL && tile->value == UNDISCOVERED && tile->flag == false) {
-				tile->open();
+				if(tile->open() == Tile::died)
+					status = Tile::died;
 			}
 		}
 	}
-
+	return status;
 }
 
 int Tile::bombNeighbours(){
