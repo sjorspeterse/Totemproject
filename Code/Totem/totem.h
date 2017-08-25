@@ -34,16 +34,19 @@ class Player
 class Avatar
 {
 	public:
+		enum {normal, glasses, dead};
 	  	LCD5110* lcd;
 	  	
 	  	Avatar(char* naam, LCD5110* lcd);
 		void action();
 		void erase();
-		void draw(int x, int y);
+		void draw(int x, int y, int type);
 		void look(int direction);
 	
 	private:
 		unsigned char* _bitmap;
+		unsigned char* _bitmap_glasses;
+		unsigned char* _bitmap_dead;
 		int _locx;
 		int _locy;
 		bool _notdrawn;

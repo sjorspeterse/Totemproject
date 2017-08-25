@@ -16,14 +16,28 @@ Avatar::Avatar(char* naam, LCD5110* lcd)
       	this->_bitmap = THOMAS_AVATAR;
    	} else if(strcmp(naam, "Sjors")==0){
       	this->_bitmap = SJORS_AVATAR;
+      	this->_bitmap_glasses = SJORS_GLASSES;
+      	this->_bitmap_dead = SJORS_DEAD;
    	} else if(strcmp(naam, "Wiebke")==0){
       	this->_bitmap = WIEBKE_AVATAR;
    	} 
    
 }
 
-void Avatar::draw(int x, int y){
-	lcd->drawBitmap(x, y, _bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
+void Avatar::draw(int x, int y, int type){
+	unsigned char* bitmap;
+	switch(type) {
+		case Avatar::normal: 
+			bitmap = _bitmap;
+			break;
+		case Avatar::glasses:
+			bitmap = _bitmap_glasses;
+			break;
+		case Avatar::dead:
+			bitmap = _bitmap_dead;
+			break;
+	}
+	lcd->drawBitmap(x, y, bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
 	_locx = x;
 	_locy = y;
 	_notdrawn = false;
