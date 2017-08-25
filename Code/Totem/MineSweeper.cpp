@@ -120,6 +120,7 @@ void MineSweeper::start() {
 		} else if(status == Tile::died) {
 			Serial.println("You died!");
 			curPlayer->avatar->draw(50,0, Avatar::dead);
+			show_bombs();
 			break;
 		}
 		lcd->update();
@@ -215,4 +216,23 @@ bool MineSweeper::won() {
 		}
 	}
 	return true;
+}
+
+void MineSweeper::show_bombs() {
+	Tile* tile;
+	for(int col = 0; col<9; col++) {
+		for(int row=0; row<9; row++) {
+			tile = _field[row][col];
+
+			// optie een: undiscovered -> bom
+			if(tile->isBomb==true && tile->flag==false)
+				tile->bitmap = BOMB_BITMAP;
+			
+			// optie twee: flag -> broken flag
+			if(tile->isBomb==false && tile->flag==true)
+				tile->bitmap = BROKEN_FLAG_BITMAP;
+
+			tile->draw();
+		}
+	}
 }

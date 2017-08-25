@@ -81,6 +81,7 @@ class MineSweeper: public Game
 		void eraseCursor();
 		void moveCursor(int input);
 		bool won();
+		void show_bombs();
 		virtual int get_input() override;
 		virtual int handle_input(int input) override;
 

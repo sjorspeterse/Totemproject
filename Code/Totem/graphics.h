@@ -36,3 +36,6 @@ const unsigned char BOMB_BITMAP [] PROGMEM= {
 
 const unsigned char FLAG_BITMAP [] PROGMEM= {
 0x0F, 0x03, 0x03, 0x03};
+
+const unsigned char BROKEN_FLAG_BITMAP [] PROGMEM= {
+0x0D, 0x02, 0x01, 0x02};
