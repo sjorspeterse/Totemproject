@@ -7,6 +7,19 @@
 
 #include "totem.h"
 
+/* 
+CONNECTIONS:
+
+GND -> LCD GND (pin 8)
+GND -> 330 ohm -> LCD LIGHT (pin 7)
+3.3V -> LCD VCC (pin 6)
+D3 -> 10k -> LCD RST (pin 1)
+D4 -> 1k -> LCD CE (pin 2)
+D5 -> 10k -> LCD DC (pin 3)
+D6 -> 10k -> LCD DIN (pin 4)
+D7 -> 10k -> LCD CLK (pin 5)
+*/
+
 LCD5110 lcd(7,6,5,3,4); //Creating LCD object
 Player Thomas = Player("Thomas", &lcd);
 Player Iris = Player("Iris", &lcd);

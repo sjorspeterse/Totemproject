@@ -65,7 +65,7 @@ int MineSweeper::handle_input(int input) {
 		case MineSweeper::open:
 			status = _curTile->open();
 			if(status == Tile::success)
-				curPlayer->avatar->action();
+				//curPlayer->avatar->action();
 			break;
 		case MineSweeper::openNumber:
 			if(_curTile->value != UNDISCOVERED)
@@ -110,7 +110,15 @@ void MineSweeper::start() {
 
 	// main Minesweeper loop
 	int status = Tile::success;
+
+	long lastTime = 0;
+	long curTime;
 	while(true) {	
+		curTime = millis();
+		Serial.print("Time: ");
+		Serial.println(curTime - lastTime);
+		lastTime = curTime;
+
 		status = handle_input(input);
 
 		if( won() ){
@@ -123,8 +131,9 @@ void MineSweeper::start() {
 			show_bombs();
 			break;
 		}
+
 		lcd->update();
-		input = get_input();
+		//input = get_input();
 	}
 
 	//Either won or lost, wait for ok
