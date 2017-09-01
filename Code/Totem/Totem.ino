@@ -1,10 +1,3 @@
-
-#include <LCD5110_Graph.h>
-#include <avr/pgmspace.h>
-
-#include "avatars.h"
-#include "demo.h"
-
 #include "totem.h"
 
 /* 
@@ -18,9 +11,10 @@ D4 -> 1k -> LCD CE (pin 2)
 D5 -> 10k -> LCD DC (pin 3)
 D6 -> 10k -> LCD DIN (pin 4)
 D7 -> 10k -> LCD CLK (pin 5)
+D8 -> Speaker+ -> Speaker- -> 1k -> GND
 */
 
-LCD5110 lcd(7,6,5,3,4); //Creating LCD object
+LCD5110_SJORS lcd(7,6,5,3,4); //Creating LCD object
 Player Thomas = Player("Thomas", &lcd);
 Player Iris = Player("Iris", &lcd);
 Player Celine = Player("Celine", &lcd);
@@ -47,8 +41,8 @@ void setup() {
 
 void loop() { 
 
-	/*MineSweeper game(player_list, &lcd, &Wiebke); //
-  	game.demoAll();*/
+	// MineSweeper game(player_list, &lcd, &Wiebke); //
+	// game.demoAll();
 
   	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
   	Serial.println ("Created MineSweeper object!");

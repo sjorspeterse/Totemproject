@@ -2,6 +2,9 @@
 #define totem_h
 #include "LCD5110_Graph.h"
 #include "graphics.h"
+#include <avr/pgmspace.h>
+#include "avatars.h"
+#include "demo.h"
 
 // General Purpose
 //enum button 
@@ -10,18 +13,16 @@ enum dir{up, down, left, right};
 // Minesweeper
 #define UNDISCOVERED -1
 
-
-
 class Player;
 class Avatar;
 class Game;
 class MineSweeper;
 class Tile;
 class Button;
+class LCD5110_SJORS;
 
 class Player
 {
-
 	public:
 	   	char* naam;
 	   	Avatar* avatar;
@@ -56,11 +57,11 @@ class Avatar
 class Game
 {
 	public:
-		LCD5110 *lcd;
+		LCD5110_SJORS *lcd;
 		Player **player_list;
 		Player *curPlayer;
 
-		Game(Player **player_list, LCD5110* lcd, Player *curPlayer);
+		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer);
 		virtual int get_input() = 0;
 		virtual int handle_input(int input) = 0;
 		void demoAll();
@@ -123,6 +124,20 @@ class Button
 	public:
 		enum {one, two, three, four, ok, up, down, left, right};
 };
+
+
+class LCD5110_SJORS: public LCD5110
+{
+	public:
+		using LCD5110::LCD5110;
+		bool getPixel(int x, int y);
+		void getBuffer(int x, int y, uint8_t* bitmap, int sx, int sy);
+		void drawBitmapDynamic(int x, int y, uint8_t* bitmap, int sx, int sy);
+
+	private:
+		// int8_t LCD5110::getByte(int index);
+};
+
 
 int free_ram();
 int get_hardware_input();

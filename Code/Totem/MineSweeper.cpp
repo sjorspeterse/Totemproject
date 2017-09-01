@@ -1,6 +1,4 @@
-#include "Arduino.h"
 #include "totem.h"
-#include "avatars.h"
 
 MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer){
 	this->_cursorCol = 4;

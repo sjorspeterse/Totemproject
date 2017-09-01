@@ -1,8 +1,6 @@
-#include "Arduino.h"
 #include "totem.h"
-#include "avatars.h"
 
-Game::Game(Player **player_list, LCD5110* lcd, Player *curPlayer)
+Game::Game(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer)
 {
 	this->lcd = lcd;
 	this->player_list = player_list;

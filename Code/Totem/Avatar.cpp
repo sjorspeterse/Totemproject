@@ -1,7 +1,4 @@
-#include "Arduino.h"
-#include "avatars.h"
 #include "totem.h"
-#include <LCD5110_Graph.h>
 
 Avatar::Avatar(char* naam, LCD5110* lcd)
 {
