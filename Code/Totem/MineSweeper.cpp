@@ -174,20 +174,51 @@ void MineSweeper::moveCursor(int input) {
 }
 
 void MineSweeper::drawCursor() {
-	/*lcd->setPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
-	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow); // top right
-	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1)); // bottom left
-	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right*/
-	lcd->drawRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
+	// top left
+	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow);
+	lcd->setPixel(1 + 5*_cursorCol + 1, 1 + 5*_cursorRow);
+	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow + 1);
+
+	// top right
+	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow);
+	lcd->setPixel(1 + 5*(_cursorCol+1) - 1, 1 + 5*_cursorRow);
+	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow + 1);
+
+	// bottom left
+	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1));
+	lcd->setPixel(1 + 5*_cursorCol + 1, 1 + 5*(_cursorRow+1));
+	lcd->setPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1) - 1);
+
+	// bottom right
+	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
+	lcd->setPixel(1 + 5*(_cursorCol+1) - 1, 1 + 5*(_cursorRow+1));
+	lcd->setPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1) - 1);
+
+	// lcd->drawRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
 }
 
 void MineSweeper::eraseCursor() {
-	/*lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow); // top left
-	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow); // top right
-	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1)); // bottom left
-	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1)); // bottom right*/
 
-	lcd->clrRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
+	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow);
+	lcd->clrPixel(1 + 5*_cursorCol + 1, 1 + 5*_cursorRow);
+	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*_cursorRow + 1);
+
+	// top right
+	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow);
+	lcd->clrPixel(1 + 5*(_cursorCol+1) - 1, 1 + 5*_cursorRow);
+	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*_cursorRow + 1);
+
+	// bottom left
+	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1));
+	lcd->clrPixel(1 + 5*_cursorCol + 1, 1 + 5*(_cursorRow+1));
+	lcd->clrPixel(1 + 5*_cursorCol, 1 + 5*(_cursorRow+1) - 1);
+
+	// bottom right
+	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
+	lcd->clrPixel(1 + 5*(_cursorCol+1) - 1, 1 + 5*(_cursorRow+1));
+	lcd->clrPixel(1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1) - 1);
+
+	// lcd->clrRect(1 + 5*_cursorCol, 1 + 5*_cursorRow, 1 + 5*(_cursorCol+1), 1 + 5*(_cursorRow+1));
 }
 
 void MineSweeper::generate_bombs() {
