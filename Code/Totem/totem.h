@@ -133,6 +133,11 @@ class LCD5110_SJORS: public LCD5110
 		bool getPixel(int x, int y);
 		void getBuffer(int x, int y, uint8_t* bitmap, int sx, int sy);
 		void drawBitmapDynamic(int x, int y, uint8_t* bitmap, int sx, int sy);
+		void setPixel(uint16_t x, uint16_t y);
+		void clrPixel(uint16_t x, uint16_t y);
+		void update();
+
+		bool changed = false;
 
 	private:
 		// int8_t LCD5110::getByte(int index);

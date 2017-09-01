@@ -131,7 +131,7 @@ void MineSweeper::start() {
 		}
 
 		lcd->update();
-		//input = get_input();
+		// input = get_input();
 	}
 
 	//Either won or lost, wait for ok

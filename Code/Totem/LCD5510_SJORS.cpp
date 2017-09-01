@@ -56,3 +56,28 @@ void LCD5110_SJORS::drawBitmapDynamic(int x, int y, uint8_t* bitmap, int sx, int
 	}  
 
 }
+
+void LCD5110_SJORS::setPixel(uint16_t x, uint16_t y)
+{
+	if(getPixel(x, y) == false){
+		LCD5110::setPixel(x, y);
+		changed = true;
+	}
+}
+
+void LCD5110_SJORS::clrPixel(uint16_t x, uint16_t y)
+{
+	if(getPixel(x, y) == true){
+		LCD5110::clrPixel(x, y);
+		changed = true;
+	}
+	
+}
+
+void LCD5110_SJORS::update()
+{
+	if(changed){
+		LCD5110::update();
+		changed = false;
+	}
+}
