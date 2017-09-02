@@ -20,6 +20,12 @@ class MineSweeper;
 class Tile;
 class Button;
 class LCD5110_SJORS;
+class Process;
+class Animation;
+class Input;
+class Audio;
+class Timer;
+class Background;
 
 class Player
 {
@@ -63,7 +69,7 @@ class Game
 
 		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer);
 		virtual int get_input() = 0;
-		virtual int handle_input(int input) = 0;
+		virtual int handle_input(int input) = 0;//int input) = 0;
 		void demoAll();
 
 	private:
@@ -84,7 +90,7 @@ class MineSweeper: public Game
 		bool won();
 		void show_bombs();
 		virtual int get_input() override;
-		virtual int handle_input(int input) override;
+		virtual int handle_input(int input) override; //int input) override;
 
 	private:
 		Tile* _curTile;
@@ -103,9 +109,9 @@ class Tile
 		int value;
 		unsigned char* bitmap;	
 		Tile* neighbour[8];
-		LCD5110 *lcd;		
+		LCD5110_SJORS *lcd;		
 
-		Tile(int col, int row, LCD5110* lcd);
+		Tile(int col, int row, LCD5110_SJORS* lcd);
 		void draw();
 		int bombNeighbours();
 		int open();
@@ -132,6 +138,7 @@ class LCD5110_SJORS: public LCD5110
 		using LCD5110::LCD5110;
 		bool getPixel(int x, int y);
 		void getBuffer(int x, int y, uint8_t* bitmap, int sx, int sy);
+		void drawBitmap(int x, int y, uint8_t* bitmap, int sx, int sy);
 		void drawBitmapDynamic(int x, int y, uint8_t* bitmap, int sx, int sy);
 		void setPixel(uint16_t x, uint16_t y);
 		void clrPixel(uint16_t x, uint16_t y);
@@ -143,6 +150,58 @@ class LCD5110_SJORS: public LCD5110
 		// int8_t LCD5110::getByte(int index);
 };
 
+class Process
+{
+	public:
+		virtual void run() = 0;
+
+	protected:
+		void sleep(int time);
+
+		unsigned long next_call_time;
+		int index;
+};
+
+// TODO: verdergaan met het implementeren van Animation ofzo.
+
+class Animation: public Process
+{
+	public:
+		virtual void run() override;
+};
+
+class Input: public Process
+{
+	public:
+		virtual void run() override;
+		static bool available;
+		static int input;
+};
+
+class Audio: public Process
+{
+	public:
+		virtual void run() override;
+};
+
+class Timer: public Process
+{
+	public:
+		virtual void run() override;
+};
+
+class Background
+{
+	public:
+		static void run_all();
+		static void add(Process *p);
+		static void remove(int index);
+
+	private:
+		static Process *process_list[10];	
+		static bool is_active[10];// = {false};
+
+};
 
 int free_ram();
 int get_hardware_input();

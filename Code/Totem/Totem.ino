@@ -37,6 +37,8 @@ void setup() {
 	player_list[3] = &Celine;
 	player_list[4] = &Sjors;
   
+  	Background::add(new Input());		// DEZE NOG DELETEN 
+
 }
 
 void loop() { 

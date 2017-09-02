@@ -71,7 +71,12 @@ void LCD5110_SJORS::clrPixel(uint16_t x, uint16_t y)
 		LCD5110::clrPixel(x, y);
 		changed = true;
 	}
-	
+}
+
+void LCD5110_SJORS::drawBitmap(int x, int y, uint8_t* bitmap, int sx, int sy)
+{
+	LCD5110::drawBitmap(x, y, bitmap, sx, sy);
+	changed = true;
 }
 
 void LCD5110_SJORS::update()
@@ -79,5 +84,6 @@ void LCD5110_SJORS::update()
 	if(changed){
 		LCD5110::update();
 		changed = false;
+		Serial.println("call update!");
 	}
 }

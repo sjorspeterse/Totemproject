@@ -3,12 +3,16 @@
 MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer){
 	this->_cursorCol = 4;
 	this->_cursorRow = 4;
+	Serial.print("free ram before tiles: ");
+	Serial.println(free_ram());
 	for(int col = 0; col<9; col++) {
 		for(int row=0; row<9; row++) {
 			Tile tile(col, row, lcd);
 			_field[row][col] = new Tile(col, row, lcd);  // TODO: DEZE OOK WEER VRIJMAKEN!!""
 		}
 	}
+	Serial.print("free ram after: ");
+	Serial.println(free_ram());
 	this->_curTile = _field[_cursorRow][_cursorCol];
 
 	Tile* tile;
@@ -29,7 +33,8 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer):
 }
 
 int MineSweeper::get_input() {
-	int buttonPressed = get_hardware_input();
+	// int buttonPressed = get_hardware_input();
+	int buttonPressed = Input::input;
 
     switch(buttonPressed) {
 	    case Button::left : return MineSweeper::left;
@@ -50,6 +55,7 @@ int MineSweeper::get_input() {
 
 int MineSweeper::handle_input(int input) {
 	int status = Tile::success;
+	
 	switch(input) {
 		case MineSweeper::left:
 		case MineSweeper::right:
@@ -63,7 +69,7 @@ int MineSweeper::handle_input(int input) {
 		case MineSweeper::open:
 			status = _curTile->open();
 			if(status == Tile::success)
-				//curPlayer->avatar->action();
+				curPlayer->avatar->action();
 			break;
 		case MineSweeper::openNumber:
 			if(_curTile->value != UNDISCOVERED)
@@ -71,12 +77,12 @@ int MineSweeper::handle_input(int input) {
 			break;
 		}
 	return status;
+	
 }
 
 void MineSweeper::start() {
 	Serial.println("Starting MineSweeper");
 	lcd->clrScr();
-
 	// drawing the field
 	for(int col = 0; col<9; col++) {
 		for(int row = 0; row<9; row++) {
@@ -94,15 +100,23 @@ void MineSweeper::start() {
 	lcd->update();
 
 	// wait until a field is opened
-	int input = get_input();
-	while(input != MineSweeper::open){
-		handle_input(input);
-		lcd->update();
-		input = get_input();
+	int input = MineSweeper::none;
+	while(true){
+		Background::run_all();
+		if(Input::available){
+			Serial.println("input is available!");
+			input = get_input();
+			if(input == MineSweeper::open)
+				break;
+			handle_input(input);
+			lcd->update();
+		}
 	}
 
 	// then generate the bombs and open the tiles
+
 	generate_bombs();
+
 	_curTile->open();
 	curPlayer->avatar->action();
 
@@ -117,7 +131,7 @@ void MineSweeper::start() {
 		Serial.println(curTime - lastTime);
 		lastTime = curTime;
 
-		status = handle_input(input);
+		// status = handle_input();// input);
 
 		if( won() ){
 			Serial.println("You won!");
@@ -130,15 +144,27 @@ void MineSweeper::start() {
 			break;
 		}
 
+		Background::run_all();
+		if(Input::available){
+			Serial.println("input is available!");
+			input = get_input();
+			status = handle_input(input);
+		}
 		lcd->update();
 		// input = get_input();
 	}
 
 	//Either won or lost, wait for ok
 	lcd->update();
-	while((input = get_hardware_input()) != Button::ok)
-		;
-
+	while(true){
+		Background::run_all();
+		if(Input::available){
+			Serial.println("got input!");
+			input = get_input();
+			if(input == Button::ok)
+				break;
+		}
+	}
 
 	Serial.println("Game done, clearing up memory");
 	// clearing up the memory
@@ -147,6 +173,7 @@ void MineSweeper::start() {
 			delete _field[row][col];
 		}
 	}
+	// moet nog Input verwijderen
 }
 
 void MineSweeper::moveCursor(int input) {
@@ -238,9 +265,10 @@ void MineSweeper::generate_bombs() {
 					goto START; // initial square should have 0 ajacent bombs 
 				}
 		tile->isBomb = true;
-		bombs_placed++;
+		bombs_placed++;	
 	}
 	Serial.println("Bombs placed!");
+	lcd->update();
 }
 
 bool MineSweeper::won() {
@@ -248,6 +276,7 @@ bool MineSweeper::won() {
 	for(int row=0; row<9; row++) {
 		for(int col=0; col<9; col++) {
 			tile = _field[row][col];
+			
 			if(tile->isBomb == false && tile->value == UNDISCOVERED) {
 				return false;
 			}

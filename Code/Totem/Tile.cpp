@@ -1,6 +1,6 @@
 #include "totem.h"
 
-Tile::Tile(int col, int row, LCD5110* lcd)
+Tile::Tile(int col, int row, LCD5110_SJORS* lcd)
 {
 	this->isBomb = false;
 	this->flag = false;
@@ -17,7 +17,6 @@ void Tile::draw(){
 
 int Tile::open() {
 	if(isBomb){
-		Serial.println("You died");
 		bitmap = BOMB_BITMAP;
 		draw();
 		return Tile::died;
@@ -86,13 +85,13 @@ int Tile::open_number() {
 int Tile::bombNeighbours(){
 	int bombs = 0;
 	Tile *tile;
+
 	for(int i = 0; i<8; i++)
 	{
 		tile = neighbour[i];
 		if (tile != NULL && tile->isBomb) {
 			bombs++;
 		}
-			
 	}
 	return bombs;
 }
