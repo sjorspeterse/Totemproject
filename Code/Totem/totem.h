@@ -5,6 +5,7 @@
 #include <avr/pgmspace.h>
 #include "avatars.h"
 #include "demo.h"
+#include "sounds.h"
 
 // General Purpose
 //enum button 
@@ -12,6 +13,8 @@ enum dir{up, down, left, right};
 
 // Minesweeper
 #define UNDISCOVERED -1
+
+#define SPEAKER_PIN 8
 
 class Player;
 class Avatar;
@@ -153,7 +156,8 @@ class LCD5110_SJORS: public LCD5110
 class Process
 {
 	public:
-		virtual void run() = 0;
+		virtual bool run() = 0;
+		virtual bool should_run() = 0;
 
 	protected:
 		void sleep(int time);
@@ -167,13 +171,15 @@ class Process
 class Animation: public Process
 {
 	public:
-		virtual void run() override;
+		virtual bool run() override;
+		virtual bool should_run() override;
 };
 
 class Input: public Process
 {
 	public:
-		virtual void run() override;
+		virtual bool run() override;
+		virtual bool should_run() override;
 		static bool available;
 		static int input;
 };
@@ -181,13 +187,27 @@ class Input: public Process
 class Audio: public Process
 {
 	public:
-		virtual void run() override;
+		Audio::Audio(int sound, bool loop);
+		virtual bool run() override;
+		virtual bool should_run() override;
+		static void start_music(int song);
+		static void play_sound(int sound);
+		enum {MARIO_MAIN_THEME};
+
+	private:
+		int frame;
+		int size;
+		int melody_mem;
+		int tempo_mem;
+		bool loop;
+
 };
 
 class Timer: public Process
 {
 	public:
-		virtual void run() override;
+		virtual bool run() override;
+		virtual bool should_run() override;
 };
 
 class Background

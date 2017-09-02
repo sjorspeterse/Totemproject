@@ -83,6 +83,7 @@ int MineSweeper::handle_input(int input) {
 void MineSweeper::start() {
 	Serial.println("Starting MineSweeper");
 	lcd->clrScr();
+	Audio::start_music(Audio::MARIO_MAIN_THEME);
 	// drawing the field
 	for(int col = 0; col<9; col++) {
 		for(int row = 0; row<9; row++) {
@@ -95,6 +96,7 @@ void MineSweeper::start() {
 
 	// drawing the cursor
 	drawCursor();
+	
 
 	// displaying everything
 	lcd->update();

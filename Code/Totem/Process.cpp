@@ -1,66 +1,21 @@
 #include "totem.h"
 
-bool Input::available = false;
-int Input::input;
+
 bool Background::is_active[10] = {false};
+
 Process* Background::process_list[10] = {nullptr};
 
-void Animation::run() {
 
-}
-
-static void Input::run() {
-	if (Serial.available() == 0){
-		available = false;
-	} else {
-		char c = Serial.read();
-		available = true;
-		switch(c) {
-		    case 'l' : 
-		    	input =  Button::left;
-		    	break;
-		    case 'r' : 
-		    	input = Button::right;
-		    	break;
-		    case 'u' : 
-		    	input = Button::up;
-		    	break;
-		    case 'd' : 
-		    	input = Button::down;
-		    	break;
-		    case 'o' : 
-		    	input = Button::ok;
-		    	break;
-		    case '1' : 
-		    	input = Button::one;
-		    	break;
-		    case '2' : 
-		    	input = Button::two;
-		    	break;
-		    case '3' : 
-		    	input = Button::three;
-		    	break;
-		    case '4' : 
-		    input = Button::four;
-		    	break;
-		}
-	}
-}
-
-void Audio::run() {
-
-}
-
-void Timer::run() {
-
-}
 
 static void Background::run_all(){
 	int time = millis();
+	bool still_active;
 
 	for(int i = 0; i<10; i++) {
-		if(is_active[i]) {
-			process_list[i]->run();
+		if(is_active[i] && process_list[i]->should_run()) {
+			still_active = process_list[i]->run();
+			if(!still_active)
+				remove(i);
 		}
 	}
 }
@@ -74,6 +29,8 @@ static void Background::add(Process *process){
 }
 
 static void Background::remove(int index){
+	Serial.print("removing Process ");
+	Serial.println(index);
 	delete process_list[index];
 	is_active[index] = false;
 }
