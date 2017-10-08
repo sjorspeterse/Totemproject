@@ -9,3 +9,6 @@
 5. Open .bmp in LCD Assistant
 
 6. Conve
+
+
+handig: http://www.rinkydinkelectronics.com/_t_doimageconverter_mono.php
