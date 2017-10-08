@@ -43,12 +43,12 @@ void setup() {
 
 void loop() { 
 
-	// MineSweeper game(player_list, &lcd, &Wiebke); //
-	// game.demoAll();
+	 MineSweeper game(player_list, &lcd, &Wiebke); //
+	 game.demoAll();
 
-  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
-  	Serial.println ("Created MineSweeper object!");
-  	ms.start();
+//  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
+//  	Serial.println ("Created MineSweeper object!");
+//  	ms.start();
 }
 
 int free_ram () 

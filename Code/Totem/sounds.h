@@ -147,15 +147,15 @@ const uint16_t MARIO_THEME_DURATIONS [] PROGMEM= {
 };
 
 const uint16_t FIREBALL_TUNE [] PROGMEM= {
-	NOTE_G4, NOTE_G5, NOTE_G6}
+	NOTE_G4, NOTE_G5, NOTE_G6};
 
 const uint16_t FIREBALL_DURATIONS [] PROGMEM= {
-	12, 12, 12}
+	12, 12, 12};
 
-  tone(8,NOTE_G4,35);
-  delay(35);
-  tone(8,NOTE_G5,35);
-  delay(35);
-  tone(8,NOTE_G6,35);
-  delay(35);
-  noTone(8);
+//  tone(8,NOTE_G4,35);
+//  delay(35);
+//  tone(8,NOTE_G5,35);
+//  delay(35);
+//  tone(8,NOTE_G6,35);
+//  delay(35);
+//  noTone(8);
