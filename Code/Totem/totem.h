@@ -15,6 +15,15 @@ enum dir{up, down, left, right};
 #define UNDISCOVERED -1
 
 #define SPEAKER_PIN 8
+#define BUTTON_1_PIN 9
+#define BUTTON_2_PIN 10
+#define BUTTON_3_PIN 11
+#define BUTTON_4_PIN 12
+#define BUTTON_UP_PIN 15 //8
+#define BUTTON_DOWN_PIN  27//10
+#define BUTTON_LEFT_PIN 31 //12
+#define BUTTON_RIGHT_PIN 19
+#define BUTTON_OK_PIN 23 //16
 
 class Player;
 class Avatar;
@@ -36,7 +45,7 @@ class Player
 	   	char* naam;
 	   	Avatar* avatar;
 
-	   	Player( char* naam, LCD5110* lcd);
+	   	Player( char* naam, LCD5110_SJORS* lcd);
 
 };
 // TODO: Implement Avatar class! Thomas.avatar.action(), Thomas.avatar.draw(int locx, int locy), Thomas.avatar.erase()
@@ -45,9 +54,9 @@ class Avatar
 {
 	public:
 		enum {normal, glasses, dead};
-	  	LCD5110* lcd;
+	  	LCD5110_SJORS* lcd;
 	  	
-	  	Avatar(char* naam, LCD5110* lcd);
+	  	Avatar(char* naam, LCD5110_SJORS* lcd);
 		void action();
 		void erase();
 		void draw(int x, int y, int type);
@@ -83,7 +92,7 @@ class MineSweeper: public Game
 	public:
 		enum {left, right, up, down, flag, open, openNumber, none};
 
-		MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer);
+		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer);
 		Tile** setup();
 		void start();
 		void generate_bombs();
@@ -182,6 +191,9 @@ class Input: public Process
 		virtual bool should_run() override;
 		static bool available;
 		static int input;
+
+	private:
+		
 };
 
 class Audio: public Process

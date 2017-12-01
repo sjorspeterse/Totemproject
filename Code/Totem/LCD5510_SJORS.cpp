@@ -84,6 +84,5 @@ void LCD5110_SJORS::update()
 	if(changed){
 		LCD5110::update();
 		changed = false;
-		Serial.println("call update!");
 	}
 }

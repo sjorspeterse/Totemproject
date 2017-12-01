@@ -14,12 +14,13 @@ D7 -> 10k -> LCD CLK (pin 5)
 D8 -> Speaker+ -> Speaker- -> 1k -> GND
 */
 
-LCD5110_SJORS lcd(7,6,5,3,4); //Creating LCD object
+LCD5110_SJORS lcd(38,40,42,46,44); //Creating LCD object
 Player Thomas = Player("Thomas", &lcd);
 Player Iris = Player("Iris", &lcd);
 Player Celine = Player("Celine", &lcd);
 Player Wiebke = Player("Wiebke", &lcd);
 Player Sjors = Player("Sjors", &lcd);
+Player Richard = Player("Richard", &lcd);
 Player *player_list[5];
  
 
@@ -43,12 +44,12 @@ void setup() {
 
 void loop() { 
 
-//	 MineSweeper game(player_list, &lcd, &Wiebke); //
-//	 game.demoAll();
+	MineSweeper game(player_list, &lcd, &Wiebke); //
+	game.demoAll();
 
   	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
   	Serial.println ("Created MineSweeper object!");
-  	ms.start();
+  	// ms.start();
 }
 
 int free_ram () 

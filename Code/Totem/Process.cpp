@@ -14,7 +14,7 @@ static void Background::run_all(){
 	for(int i = 0; i<10; i++) {
 		if(is_active[i] && process_list[i]->should_run()) {
 			still_active = process_list[i]->run();
-			if(!still_active)
+			if(still_active == false) 
 				remove(i);
 		}
 	}

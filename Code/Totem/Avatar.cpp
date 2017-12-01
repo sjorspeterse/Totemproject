@@ -1,6 +1,6 @@
 #include "totem.h"
 
-Avatar::Avatar(char* naam, LCD5110* lcd)
+Avatar::Avatar(char* naam, LCD5110_SJORS* lcd)
 {
 	this->_notdrawn = true;
 	this->lcd = lcd;
@@ -17,11 +17,14 @@ Avatar::Avatar(char* naam, LCD5110* lcd)
       	this->_bitmap_dead = SJORS_DEAD;
    	} else if(strcmp(naam, "Wiebke")==0){
       	this->_bitmap = WIEBKE_AVATAR;
+   	} else if(strcmp(naam, "Richard")==0){
+      	this->_bitmap = RICHARD_AVATAR;
    	} 
    
 }
 
 void Avatar::draw(int x, int y, int type){
+	// Serial.println("Drawing avatar!");
 	unsigned char* bitmap;
 	switch(type) {
 		case Avatar::normal: 
@@ -34,6 +37,7 @@ void Avatar::draw(int x, int y, int type){
 			bitmap = _bitmap_dead;
 			break;
 	}
+	// Serial.println("Going to draw bitmap");
 	lcd->drawBitmap(x, y, bitmap, AVATAR_WIDTH, AVATAR_HEIGHT);
 	_locx = x;
 	_locy = y;
