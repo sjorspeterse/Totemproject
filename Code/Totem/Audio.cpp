@@ -40,7 +40,7 @@ bool Audio::run() {
 	if(loop){
 		if(frame >= size)
 			frame = 0;
-		return true
+		return true;
 	} else{
 		return frame < size;
 	}
