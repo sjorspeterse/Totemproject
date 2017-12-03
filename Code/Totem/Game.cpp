@@ -24,33 +24,35 @@ void Game::demoAll() {
   	int middlelocx = 42-17;
 	Avatar *leftmost, *left, *center, *right, *rightmost;
 
-  	for (int nr = 0; nr < 5; nr++) {
-    	middlelocx = 42-17;
-    	for(int i = 0; i <11; i++){
-	     	leftmost = player_list[nr%5]->avatar;
-	      	left = player_list[(nr+1)%5]->avatar;
-	      	center = player_list[(nr+2)%5]->avatar;
-	      	right = player_list[(nr+3)%5]->avatar;
-	      	rightmost = player_list[(nr+4)%5]->avatar;
+	while(true){
+	  	for (int nr = 0; nr < 5; nr++) {
+	    	middlelocx = 42-17;
+	    	for(int i = 0; i <11; i++){
+		     	leftmost = player_list[nr%5]->avatar;
+		      	left = player_list[(nr+1)%5]->avatar;
+		      	center = player_list[(nr+2)%5]->avatar;
+		      	right = player_list[(nr+3)%5]->avatar;
+		      	rightmost = player_list[(nr+4)%5]->avatar;
 
-		    lcd->clrScr();
-		    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
-	      	center->draw(middlelocx, -yoffset[22 + i], Avatar::normal); //Middle figure
-    	  	right->draw(middlelocx + 36, -yoffset[11 + i], Avatar::normal); //Right figure
-	      	rightmost->draw(middlelocx + 2*36, -yoffset[i], Avatar::normal); //Rightmost figure
-	      	lcd->update();
+			    lcd->clrScr();
+			    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
+		      	center->draw(middlelocx, -yoffset[22 + i], Avatar::normal); //Middle figure
+	    	  	right->draw(middlelocx + 36, -yoffset[11 + i], Avatar::normal); //Right figure
+		      	rightmost->draw(middlelocx + 2*36, -yoffset[i], Avatar::normal); //Rightmost figure
+		      	lcd->update();
 
-	      	middlelocx -= acceleratex[i];
-	      	delay(30);   
-    	}
+		      	middlelocx -= acceleratex[i];
+		      	delay(30);   
+	    	}
 
-    right->action();
-    right->look(EYES_LEFT);
-    right->look(EYES_RIGHT);
-    right->look(EYES_UP);
-    right->look(EYES_DOWN);
+	    // right->action();
+	    // right->look(EYES_LEFT);
+	    // right->look(EYES_RIGHT);
+	    // right->look(EYES_UP);
+	    // right->look(EYES_DOWN);
 
-    delay(200);
+	    delay(200);
+		}
 	}
 
 
@@ -58,12 +60,12 @@ void Game::demoAll() {
 	// Demo getting the buffer and drawing dynamically //
 	****************************************************/
 	
-	lcd->clrScr(); 
-	Avatar *avatar = player_list[0]->avatar;
-	avatar->draw(-10, -10, Avatar::normal);
-	unsigned char bitmap [20*3];
-  	lcd->getBuffer(0, 0, bitmap, 20, 20);
-  	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
-  	lcd->update();
-  	delay(1000);
+	// lcd->clrScr(); 
+	// Avatar *avatar = player_list[0]->avatar;
+	// avatar->draw(-10, -10, Avatar::normal);
+	// unsigned char bitmap [20*3];
+ //  	lcd->getBuffer(0, 0, bitmap, 20, 20);
+ //  	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
+ //  	lcd->update();
+ //  	delay(1000);
 }

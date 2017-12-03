@@ -1,6 +1,6 @@
 #include "totem.h"
 
-MineSweeper::MineSweeper(Player **player_list, LCD5110* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer){
+MineSweeper::MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer): Game(player_list, lcd, curPlayer){
 	this->_cursorCol = 4;
 	this->_cursorRow = 4;
 	Serial.print("free ram before tiles: ");
