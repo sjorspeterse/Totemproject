@@ -19,6 +19,20 @@ Avatar::Avatar(char* naam, LCD5110_SJORS* lcd)
       	this->_bitmap = WIEBKE_AVATAR;
    	} else if(strcmp(naam, "Richard")==0){
       	this->_bitmap = RICHARD_AVATAR;
+    } else if(strcmp(naam, "Aniek")==0){
+      	this->_bitmap = ANIEK_AVATAR;
+    } else if(strcmp(naam, "Anna")==0){
+      	this->_bitmap = ANNA_AVATAR;
+    } else if(strcmp(naam, "Corijn")==0){
+      	this->_bitmap = CORIJN_AVATAR;
+    } else if(strcmp(naam, "Jeroen")==0){
+      	this->_bitmap = JEROEN_AVATAR;
+    } else if(strcmp(naam, "Rik")==0){
+      	this->_bitmap = RIK_AVATAR;
+    } else if(strcmp(naam, "Sander")==0){
+      	this->_bitmap = SANDER_AVATAR;
+    } else if(strcmp(naam, "Thijs")==0){
+      	this->_bitmap = THIJS_AVATAR;
    	} 
    
 }

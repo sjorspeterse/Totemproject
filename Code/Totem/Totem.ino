@@ -21,7 +21,15 @@ Player Celine = Player("Celine", &lcd);
 Player Wiebke = Player("Wiebke", &lcd);
 Player Sjors = Player("Sjors", &lcd);
 Player Richard = Player("Richard", &lcd);
-Player *player_list[5];
+Player Aniek = Player("Aniek", &lcd);
+Player Anna = Player("Anna", &lcd);
+Player Corijn = Player("Corijn", &lcd);
+Player Jeroen = Player("Jeroen", &lcd);
+Player Rik = Player("Rik", &lcd);
+Player Sander = Player("Sander", &lcd);
+Player Thijs = Player("Thijs", &lcd);
+
+Player *player_list[13];
  
 
 void setup() {
@@ -37,7 +45,15 @@ void setup() {
 	player_list[2] = &Wiebke;
 	player_list[3] = &Celine;
 	player_list[4] = &Sjors;
-  
+	player_list[5] = &Aniek;
+	player_list[6] = &Anna;
+	player_list[7] = &Corijn;
+	player_list[8] = &Jeroen;
+	player_list[9] = &Richard;
+  	player_list[10] = &Rik;
+	player_list[11] = &Sander;
+	player_list[12] = &Thijs;
+
   	Background::add(new Input());		// DEZE NOG DELETEN 
 
 }
@@ -45,7 +61,7 @@ void setup() {
 void loop() { 
 
 	MineSweeper game(player_list, &lcd, &Wiebke); //
-	// game.demoAll();
+	game.demoAll();
 
   	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
   	Serial.println ("Created MineSweeper object!");

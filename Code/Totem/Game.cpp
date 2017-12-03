@@ -24,15 +24,17 @@ void Game::demoAll() {
   	int middlelocx = 42-17;
 	Avatar *leftmost, *left, *center, *right, *rightmost;
 
+	int p_c = 13; // player count
+
 	while(true){
-	  	for (int nr = 0; nr < 5; nr++) {
+	  	for (int nr = 0; nr < p_c; nr++) {
 	    	middlelocx = 42-17;
 	    	for(int i = 0; i <11; i++){
-		     	leftmost = player_list[nr%5]->avatar;
-		      	left = player_list[(nr+1)%5]->avatar;
-		      	center = player_list[(nr+2)%5]->avatar;
-		      	right = player_list[(nr+3)%5]->avatar;
-		      	rightmost = player_list[(nr+4)%5]->avatar;
+		     	leftmost = player_list[nr%p_c]->avatar;
+		      	left = player_list[(nr+1)%p_c]->avatar;
+		      	center = player_list[(nr+2)%p_c]->avatar;
+		      	right = player_list[(nr+3)%p_c]->avatar;
+		      	rightmost = player_list[(nr+4)%p_c]->avatar;
 
 			    lcd->clrScr();
 			    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
