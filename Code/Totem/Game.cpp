@@ -19,44 +19,9 @@ void Game::demoAll() {
 	// Demo Avatar select, action and eyes //
 	****************************************/
 
-	int acceleratex[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
-  	int yoffset[] = {41, 40, 38, 35, 31, 26 ,20, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 8, 11, 15, 20, 26, 31, 35, 38, 40, 41};
-  	int middlelocx = 42-17;
-	Avatar *leftmost, *left, *center, *right, *rightmost;
-
-	int p_c = 13; // player count
-
-	while(true){
-	  	for (int nr = 0; nr < p_c; nr++) {
-	    	middlelocx = 42-17;
-	    	for(int i = 0; i <11; i++){
-		     	leftmost = player_list[nr%p_c]->avatar;
-		      	left = player_list[(nr+1)%p_c]->avatar;
-		      	center = player_list[(nr+2)%p_c]->avatar;
-		      	right = player_list[(nr+3)%p_c]->avatar;
-		      	rightmost = player_list[(nr+4)%p_c]->avatar;
-
-			    lcd->clrScr();
-			    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
-		      	center->draw(middlelocx, -yoffset[22 + i], Avatar::normal); //Middle figure
-	    	  	right->draw(middlelocx + 36, -yoffset[11 + i], Avatar::normal); //Right figure
-		      	rightmost->draw(middlelocx + 2*36, -yoffset[i], Avatar::normal); //Rightmost figure
-		      	lcd->update();
-
-		      	middlelocx -= acceleratex[i];
-		      	delay(30);   
-	    	}
-
-	    // right->action();
-	    // right->look(EYES_LEFT);
-	    // right->look(EYES_RIGHT);
-	    // right->look(EYES_UP);
-	    // right->look(EYES_DOWN);
-
-	    delay(200);
-		}
+	for(int i = 0; i < 130; i++){
+		rotate_list(0);
 	}
-
 
 	/****************************************************
 	// Demo getting the buffer and drawing dynamically //
@@ -70,4 +35,53 @@ void Game::demoAll() {
  //  	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
  //  	lcd->update();
  //  	delay(1000);
+}
+
+Player* Game::rotate_list(int dir){
+
+	// TODO: ALSO ENABLE ROTATION TO THE OTHER SIDE
+
+
+
+
+	int acceleratex[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
+  	int yoffset[] = {41, 40, 38, 35, 31, 26 ,20, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 8, 11, 15, 20, 26, 31, 35, 38, 40, 41};
+  	int middlelocx = 42-17;
+	Avatar *leftmost, *left, *center, *right, *rightmost;
+
+	int p_c = 13; // player count
+
+	int nr;
+	for(nr = 0; curPlayer != player_list[nr]; nr++);
+	Serial.print("player number is ");
+	Serial.println(nr);
+
+    middlelocx = 42-17;
+	for(int i = 0; i <11; i++){
+     	leftmost = player_list[nr%p_c]->avatar;
+      	left = player_list[(nr+1)%p_c]->avatar;
+      	center = player_list[(nr+2)%p_c]->avatar;
+      	right = player_list[(nr+3)%p_c]->avatar;
+      	rightmost = player_list[(nr+4)%p_c]->avatar;
+
+	    lcd->clrScr();
+	    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
+      	center->draw(middlelocx, -yoffset[22 + i], Avatar::normal); //Middle figure
+	  	right->draw(middlelocx + 36, -yoffset[11 + i], Avatar::normal); //Right figure
+      	rightmost->draw(middlelocx + 2*36, -yoffset[i], Avatar::normal); //Rightmost figure
+      	lcd->update();
+
+      	middlelocx -= acceleratex[i];
+      	delay(30);   
+      }
+    // right->action();
+    // right->look(EYES_LEFT);
+    // right->look(EYES_RIGHT);
+    // right->look(EYES_UP);
+    // right->look(EYES_DOWN);
+
+    // delay(200);
+    Player* player = player_list[(nr+1)%p_c];
+    curPlayer = player;
+	return player;
 }

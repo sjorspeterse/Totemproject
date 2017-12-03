@@ -85,6 +85,7 @@ class Game
 		void demoAll();
 
 	private:
+		Player* rotate_list(int dir);
 };
 
 class MineSweeper: public Game
