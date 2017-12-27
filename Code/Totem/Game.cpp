@@ -1,10 +1,11 @@
 #include "totem.h"
 
-Game::Game(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer)
+Game::Game(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer, TM1637Display* timer)
 {
 	this->lcd = lcd;
 	this->player_list = player_list;
 	this->curPlayer = curPlayer;
+	this->timer = timer;
 }
 
 void Game::demoAll() {
@@ -15,11 +16,20 @@ void Game::demoAll() {
   	// game.demoAll();				          //
 	*******************************************/
 
+
+	/*******************************************
+	// Demoing timer				          //
+	*******************************************/
+	for(int k = 0; k < 20; k ++) {
+		timer->	showNumberDec(k, false);
+		delay(1000);
+	}
+
 	/****************************************
 	// Demo Avatar select, action and eyes //
 	****************************************/
 
-	for(int i = 0; i < 130; i++){
+	for(int i = 0; i < 13; i++){
 		rotate_list(0);
 	}
 
@@ -27,14 +37,14 @@ void Game::demoAll() {
 	// Demo getting the buffer and drawing dynamically //
 	****************************************************/
 	
-	// lcd->clrScr(); 
-	// Avatar *avatar = player_list[0]->avatar;
-	// avatar->draw(-10, -10, Avatar::normal);
-	// unsigned char bitmap [20*3];
- //  	lcd->getBuffer(0, 0, bitmap, 20, 20);
- //  	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
- //  	lcd->update();
- //  	delay(1000);
+	lcd->clrScr(); 
+	Avatar *avatar = player_list[0]->avatar;
+	avatar->draw(-10, -10, Avatar::normal);
+	unsigned char bitmap [20*3];
+  	lcd->getBuffer(0, 0, bitmap, 20, 20);
+  	lcd->drawBitmapDynamic(40, 0, bitmap, 20, 20);
+  	lcd->update();
+  	delay(1000);
 }
 
 Player* Game::rotate_list(int dir){

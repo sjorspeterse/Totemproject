@@ -6,6 +6,8 @@
 #include "avatars.h"
 #include "demo.h"
 #include "sounds.h"
+#include "TM1637Display.h"
+
 
 // General Purpose
 //enum button 
@@ -24,6 +26,10 @@ enum dir{up, down, left, right};
 #define BUTTON_LEFT_PIN 31 //12
 #define BUTTON_RIGHT_PIN 19
 #define BUTTON_OK_PIN 23 //16
+
+//Timer
+#define TIMER_CLK 3
+#define TIMER_DIO 5
 
 class Player;
 class Avatar;
@@ -78,8 +84,9 @@ class Game
 		LCD5110_SJORS *lcd;
 		Player **player_list;
 		Player *curPlayer;
+		TM1637Display *timer;
 
-		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer);
+		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer, TM1637Display *timer);
 		virtual int get_input() = 0;
 		virtual int handle_input(int input) = 0;//int input) = 0;
 		void demoAll();
@@ -93,7 +100,7 @@ class MineSweeper: public Game
 	public:
 		enum {left, right, up, down, flag, open, openNumber, none};
 
-		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer);
+		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer, TM1637Display *timer);
 		Tile** setup();
 		void start();
 		void generate_bombs();

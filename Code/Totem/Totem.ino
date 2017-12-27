@@ -30,6 +30,9 @@ Player Sander = Player("Sander", &lcd);
 Player Thijs = Player("Thijs", &lcd);
 
 Player *player_list[13];
+
+//Timer
+TM1637Display timer(TIMER_CLK, TIMER_DIO);
  
 
 void setup() {
@@ -55,15 +58,15 @@ void setup() {
 	player_list[12] = &Thijs;
 
   	Background::add(new Input());		// DEZE NOG DELETEN 
+  	timer.setBrightness(0x0f);
 
 }
 
 void loop() { 
+	// MineSweeper game(player_list, &lcd, &Wiebke, &timer); //
+	// game.demoAll();
 
-	MineSweeper game(player_list, &lcd, &Wiebke); //
-	game.demoAll();
-
-  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors);
+  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors, &timer);
   	Serial.println ("Created MineSweeper object!");
   	ms.start();
 }
