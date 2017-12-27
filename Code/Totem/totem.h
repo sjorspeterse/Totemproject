@@ -200,8 +200,7 @@ class Input: public Process
 		static bool available;
 		static int input;
 
-	private:
-		
+	private:	
 };
 
 class Audio: public Process
@@ -226,8 +225,14 @@ class Audio: public Process
 class Timer: public Process
 {
 	public:
+		Timer::Timer(TM1637Display* timer);
 		virtual bool run() override;
 		virtual bool should_run() override;
+
+	private:
+		static int value;
+		TM1637Display *timer;
+
 };
 
 class Background
