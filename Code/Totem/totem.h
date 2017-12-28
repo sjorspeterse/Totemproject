@@ -17,15 +17,23 @@ enum dir{up, down, left, right};
 #define UNDISCOVERED -1
 
 #define SPEAKER_PIN 8
-#define BUTTON_1_PIN 9
-#define BUTTON_2_PIN 10
-#define BUTTON_3_PIN 11
-#define BUTTON_4_PIN 12
+
 #define BUTTON_UP_PIN 15 //8
 #define BUTTON_DOWN_PIN  27//10
 #define BUTTON_LEFT_PIN 31 //12
 #define BUTTON_RIGHT_PIN 19
 #define BUTTON_OK_PIN 23 //16
+
+#define OK 0
+#define UP 1
+#define DOWN 2
+#define LEFT 3
+#define RIGHT 4
+
+#define BUTTON_NOTHING 0
+#define BUTTON_PRESSED 1
+#define BUTTON_RELEASED_SHORT 2
+#define BUTTON_RELEASED_LONG 3
 
 //Timer
 #define TIMER_CLK 3
@@ -98,7 +106,7 @@ class Game
 class MineSweeper: public Game
 {
 	public:
-		enum {left, right, up, down, flag, open, openNumber, none};
+		enum {up, down, left, right, flag, open, openNumber, none};
 
 		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer, TM1637Display *timer);
 		Tile** setup();
@@ -195,12 +203,14 @@ class Animation: public Process
 class Input: public Process
 {
 	public:
+		Input::Input();
 		virtual bool run() override;
 		virtual bool should_run() override;
 		static bool available;
-		static int input;
+		static int button_status[6];
 
-	private:	
+	private:
+		unsigned long buttons_last_pressed[6] = {0, 0, 0, 0, 0, 0};
 };
 
 class Audio: public Process
@@ -230,7 +240,7 @@ class Timer: public Process
 		virtual bool should_run() override;
 
 	private:
-		static int value;
+		int value;
 		TM1637Display *timer;
 
 };

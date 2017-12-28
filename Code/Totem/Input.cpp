@@ -1,87 +1,57 @@
 #include "totem.h"
 
+#define LONG_PRESS 300
+
 bool Input::available = false;
-int Input::input;
+static int Input::button_status[6] = {BUTTON_NOTHING, BUTTON_NOTHING, BUTTON_NOTHING, BUTTON_NOTHING, BUTTON_NOTHING, BUTTON_NOTHING};
 
+Input::Input(){
+	for(int i=0; i<6; i++){
+		this->buttons_last_pressed[i] = 0;
+	}
+}
 
-bool Input::run() {
-	// if (Serial.available() == 0){
-	// 	available = false;
-	// } else {
-	// 	char c = Serial.read();
-	// 	available = true;
-	// 	switch(c) {
-	// 	    case 'l' : 
-	// 	    	input =  Button::left;
-	// 	    	break;
-	// 	    case 'r' : 
-	// 	    	input = Button::right;
-	// 	    	break;
-	// 	    case 'u' : 
-	// 	    	input = Button::up;
-	// 	    	break;
-	// 	    case 'd' : 
-	// 	    	input = Button::down;
-	// 	    	break;
-	// 	    case 'o' : 
-	// 	    	input = Button::ok;
-	// 	    	break;
-	// 	    case '1' : 
-	// 	    	input = Button::one;
-	// 	    	break;
-	// 	    case '2' : 
-	// 	    	input = Button::two;
-	// 	    	break;
-	// 	    case '3' : 
-	// 	    	input = Button::three;
-	// 	    	break;
-	// 	    case '4' : 
-	// 	    input = Button::four;
-	// 	    	break;
-	// 	}
-	// }
+bool Input::run() {	
+	int pins[] = {BUTTON_OK_PIN, BUTTON_UP_PIN, BUTTON_DOWN_PIN, BUTTON_LEFT_PIN, BUTTON_RIGHT_PIN};
 
-	// check all pins
+	// Serial.print("status(");
+	// Serial.print(millis());
+	// Serial.print("): [");
+	available = false;
+	for(int i=0; i<5; i++) {
+		if(digitalRead(pins[i])){
+			available = true;
+			Serial.println("True 1!");
+			button_status[i] = BUTTON_PRESSED;
+			if(buttons_last_pressed[i] == 0)
+				buttons_last_pressed[i] = millis();
+		} else {
+			int press_length = millis() - buttons_last_pressed[i];
+			if(press_length > LONG_PRESS && buttons_last_pressed[i] != 0){
+				button_status[i] = BUTTON_RELEASED_LONG;
+				available = true;
+				Serial.println("True 2!");
+			}
+			else if(buttons_last_pressed[i] > 0){
+				button_status[i] = BUTTON_RELEASED_SHORT;
+				available = true;
+				Serial.println("True 3!");
 
-	// if input available: next_call time = cur call_time + 1 sec
-	// if not, sooner!
+			}
 
-	int truePin = -1;
-	int pins[] = {BUTTON_UP_PIN, BUTTON_DOWN_PIN, BUTTON_LEFT_PIN, BUTTON_RIGHT_PIN, BUTTON_OK_PIN};
-	for(const int pin : pins) {
-		// Serial.println(pin);
-		// reading = digitalRead(pin);
-		int kaas = digitalRead(pin);
-		if(digitalRead(pin)){
-			truePin = pin;
+			if(buttons_last_pressed[i] == 0){
+				button_status[i] = BUTTON_NOTHING;
+			}
+			buttons_last_pressed[i] = 0;
 		}
-		// Serial.print(reading);
+		// Serial.print(button_status[i]);
+		// Serial.print("(");
+		// Serial.print(buttons_last_pressed[i]);
+		// Serial.print("), ");
 	}
-	// Serial.println("");
-
-//	Serial.println("truePin: " + truePin);
-	available = true;
-	switch(truePin) {
-		case BUTTON_LEFT_PIN : 
-			Serial.print("pressed left");
-	    	input =  Button::left;
-	    	break;
-	    case BUTTON_RIGHT_PIN : 
-	    	input = Button::right;
-	    	break;
-	    case BUTTON_UP_PIN: 
-	    	input = Button::up;
-	    	break;
-	    case BUTTON_DOWN_PIN : 
-	    	input = Button::down;
-	    	break;
-	    case BUTTON_OK_PIN : 
-	    	input = Button::two;
-	    	break;
-	    default:
-	    	available = false;
-	    	break;
-	}
+	// Serial.println("]");
+	Serial.print("Input::run(): available = ");
+	Serial.println(available);
 	return true;
 }
 

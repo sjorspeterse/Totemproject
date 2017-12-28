@@ -33,24 +33,69 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPl
 }
 
 int MineSweeper::get_input() {
-	// int buttonPressed = get_hardware_input();
-	int buttonPressed = Input::input;
-
-    switch(buttonPressed) {
-	    case Button::left : return MineSweeper::left;
-	    case Button::right : return MineSweeper::right;
-	    case Button::up : return MineSweeper::up;
-	    case Button::down : return MineSweeper::down;
-	    case Button::ok : 
-	    	if(_curTile->value == UNDISCOVERED) 
-	    		return MineSweeper::flag;
-	    	else 
-	    		return MineSweeper::openNumber;
-	    case Button::one : return MineSweeper::flag;
-	    case Button::two : return MineSweeper::open;
-	    case Button::three : return MineSweeper::openNumber;
-	    case Button::four : return MineSweeper::none;
+	int status;
+	for(int i=0; i<5; i++){
+		status = Input::button_status[i];
+		if(status == BUTTON_NOTHING){
+			continue;
+		}
+		switch(i) {
+			case OK:
+				switch(status){
+					case BUTTON_PRESSED:
+						Serial.println("Pressing OK button!");
+						break;
+					case BUTTON_RELEASED_SHORT:
+						if(this->_curTile->value == UNDISCOVERED){
+							return MineSweeper::flag;
+						} else if(this->_curTile->flag == 1){
+							return MineSweeper::flag;
+						} else
+							return MineSweeper::openNumber;
+						break;
+					case BUTTON_RELEASED_LONG:
+						if(this->_curTile->value == UNDISCOVERED){
+							return MineSweeper::open;
+						} else if(this->_curTile->flag == 1){
+							return MineSweeper::none;
+						} else
+							return MineSweeper::none;
+						break;
+				}
+			case UP:
+				if(status == BUTTON_PRESSED){
+					return MineSweeper::up;
+				}
+			case DOWN:
+				if(status == BUTTON_PRESSED){
+					return MineSweeper::down;
+				}
+			case LEFT:
+				if(status == BUTTON_PRESSED){
+					return MineSweeper::left;
+				}
+			case RIGHT:
+				if(status == BUTTON_PRESSED){
+					return MineSweeper::right;
+				}
+		}
 	}
+
+ //    switch(buttonPressed) {
+	//     case Button::left : return MineSweeper::left;
+	//     case Button::right : return MineSweeper::right;
+	//     case Button::up : return MineSweeper::up;
+	//     case Button::down : return MineSweeper::down;
+	//     case Button::ok : 
+	//     	if(_curTile->value == UNDISCOVERED) 
+	//     		return MineSweeper::flag;
+	//     	else 
+	//     		return MineSweeper::openNumber;
+	//     case Button::one : return MineSweeper::flag;
+	//     case Button::two : return MineSweeper::open;
+	//     case Button::three : return MineSweeper::openNumber;
+	//     case Button::four : return MineSweeper::none;
+	// }
 }
 
 int MineSweeper::handle_input(int input) {

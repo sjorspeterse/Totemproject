@@ -57,7 +57,7 @@ void setup() {
 	player_list[11] = &Sander;
 	player_list[12] = &Thijs;
 
-  	Background::add(new Input());		// DEZE NOG DELETEN 
+  	Background::add(new Input());		// DEZE NOG VERPLAATSEN 
   	timer.setBrightness(0x0f);
 
 }
