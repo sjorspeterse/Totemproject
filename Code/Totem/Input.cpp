@@ -20,22 +20,23 @@ bool Input::run() {
 	available = false;
 	for(int i=0; i<5; i++) {
 		if(digitalRead(pins[i])){
-			available = true;
-			Serial.println("True 1!");
 			button_status[i] = BUTTON_PRESSED;
-			if(buttons_last_pressed[i] == 0)
+			if(buttons_last_pressed[i] == 0){
 				buttons_last_pressed[i] = millis();
+        available = true;
+        Serial.print(" TRUE ");
+			}
 		} else {
 			int press_length = millis() - buttons_last_pressed[i];
 			if(press_length > LONG_PRESS && buttons_last_pressed[i] != 0){
 				button_status[i] = BUTTON_RELEASED_LONG;
 				available = true;
-				Serial.println("True 2!");
+				//Serial.println("Input is available, because released short");
 			}
 			else if(buttons_last_pressed[i] > 0){
 				button_status[i] = BUTTON_RELEASED_SHORT;
 				available = true;
-				Serial.println("True 3!");
+				//Serial.println("Input is available, because released long");
 
 			}
 
@@ -44,10 +45,10 @@ bool Input::run() {
 			}
 			buttons_last_pressed[i] = 0;
 		}
-		// Serial.print(button_status[i]);
-		// Serial.print("(");
-		// Serial.print(buttons_last_pressed[i]);
-		// Serial.print("), ");
+		 Serial.print(button_status[i]);
+		 Serial.print("(");
+		 Serial.print(buttons_last_pressed[i]);
+		 Serial.print("), ");
 	}
 	// Serial.println("]");
 	Serial.print("Input::run(): available = ");
