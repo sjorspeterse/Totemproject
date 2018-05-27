@@ -1,4 +1,5 @@
 #include "totem.h"
+#include <Arduino.h>
 
 /* 
 CONNECTIONS:

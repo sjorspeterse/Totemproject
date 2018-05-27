@@ -89,14 +89,15 @@ class Avatar
 class Game
 {
 	public:
+		enum action_type {up, down, left, right, flag, open, openNumber, none};
 		LCD5110_SJORS *lcd;
 		Player **player_list;
 		Player *curPlayer;
 		TM1637Display *timer;
 
 		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer, TM1637Display *timer);
-		virtual int get_input() = 0;
-		virtual int handle_input(int input) = 0;//int input) = 0;
+		virtual action_type get_input() = 0;
+		virtual int handle_input(action_type input) = 0;//int input) = 0;
 		void demoAll();
 
 	private:
@@ -106,7 +107,6 @@ class Game
 class MineSweeper: public Game
 {
 	public:
-		enum {up, down, left, right, flag, open, openNumber, none};
 
 		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer, TM1637Display *timer);
 		Tile** setup();
@@ -114,11 +114,11 @@ class MineSweeper: public Game
 		void generate_bombs();
 		void drawCursor();
 		void eraseCursor();
-		void moveCursor(int input);
+		void moveCursor(action_type input);
 		bool won();
 		void show_bombs();
-		virtual int get_input() override;
-		virtual int handle_input(int input) override; //int input) override;
+		virtual action_type get_input() override;
+		virtual int handle_input(action_type input) override; //int input) override;
 
 	private:
 		Tile* _curTile;
@@ -203,7 +203,7 @@ class Animation: public Process
 class Input: public Process
 {
 	public:
-		Input::Input();
+		Input();
 		virtual bool run() override;
 		virtual bool should_run() override;
 		static bool available;
@@ -216,7 +216,7 @@ class Input: public Process
 class Audio: public Process
 {
 	public:
-		Audio::Audio(int sound, bool loop);
+		Audio(int sound, bool loop);
 		virtual bool run() override;
 		virtual bool should_run() override;
 		static void start_music(int song);
@@ -235,7 +235,7 @@ class Audio: public Process
 class Timer: public Process
 {
 	public:
-		Timer::Timer(TM1637Display* timer);
+		Timer(TM1637Display* timer);
 		virtual bool run() override;
 		virtual bool should_run() override;
 

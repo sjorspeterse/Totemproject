@@ -32,7 +32,7 @@ MineSweeper::MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPl
 	Serial.println("connected Tiles together");	
 }
 
-int MineSweeper::get_input() {
+Game::action_type MineSweeper::get_input() {
 	int status;
 	for(int i=0; i<5; i++){
 		status = Input::button_status[i];
@@ -41,10 +41,10 @@ int MineSweeper::get_input() {
 		}
 		switch(i) {
 			case OK:
+				Serial.println("Pressing OK button!");
 				switch(status){
 					case BUTTON_PRESSED:
-						Serial.println("Pressing OK button!");
-						break;
+						return MineSweeper::none;
 					case BUTTON_RELEASED_SHORT:
 						if(this->_curTile->value == UNDISCOVERED){
 							return MineSweeper::flag;
@@ -64,6 +64,7 @@ int MineSweeper::get_input() {
 				}
 			case UP:
 				if(status == BUTTON_PRESSED){
+					Serial.println("Pressed up button");
 					return MineSweeper::up;
 				}
 			case DOWN:
@@ -98,14 +99,20 @@ int MineSweeper::get_input() {
 	// }
 }
 
-int MineSweeper::handle_input(int input) {
+int MineSweeper::handle_input(action_type input) {
 	int status = Tile::success;
-	
+	Serial.print("Handling input (");
+	Serial.print(input);
+	Serial.println(")");
 	switch(input) {
 		case MineSweeper::left:
+			Serial.println("Pressed Left");
 		case MineSweeper::right:
+			Serial.println("Pressed Right");
 		case MineSweeper::up:
+			Serial.println("Pressed Up");
 		case MineSweeper::down:
+			Serial.println("Pressed Down");
 			moveCursor(input);
 			break;
 		case MineSweeper::flag:
@@ -225,7 +232,7 @@ void MineSweeper::start() {
 	// moet nog Input verwijderen
 }
 
-void MineSweeper::moveCursor(int input) {
+void MineSweeper::moveCursor(action_type input) {
 	eraseCursor();
 	switch(input) {
 		case MineSweeper::left: 
