@@ -8,10 +8,9 @@
 #include "sounds.h"
 #include "TM1637Display.h"
 
-
 // General Purpose
 //enum button 
-enum dir{up, down, left, right};
+enum dir { up, down, left, right };
 
 // Minesweeper
 #define UNDISCOVERED -1
@@ -53,208 +52,193 @@ class Audio;
 class Timer;
 class Background;
 
-class Player
-{
-	public:
-	   	char* naam;
-	   	Avatar* avatar;
+class Player {
+ public:
+  char *naam;
+  Avatar *avatar;
 
-	   	Player( char* naam, LCD5110_SJORS* lcd);
+  Player(char *naam, LCD5110_SJORS *lcd);
 
 };
 // TODO: Implement Avatar class! Thomas.avatar.action(), Thomas.avatar.draw(int locx, int locy), Thomas.avatar.erase()
 // variables: unsigned char* _background, int _locx, int _locy, boolean _isdrawn, ...
-class Avatar
-{
-	public:
-		enum {normal, glasses, dead};
-	  	LCD5110_SJORS* lcd;
-	  	
-	  	Avatar(char* naam, LCD5110_SJORS* lcd);
-		void action();
-		void erase();
-		void draw(int x, int y, int type);
-		void look(int direction);
-	
-	private:
-		unsigned char* _bitmap;
-		unsigned char* _bitmap_glasses;
-		unsigned char* _bitmap_dead;
-		int _locx;
-		int _locy;
-		bool _notdrawn;
-	
+class Avatar {
+ public:
+  enum { normal, glasses, dead };
+  LCD5110_SJORS *lcd;
+
+  Avatar(char *naam, LCD5110_SJORS *lcd);
+  void action();
+  void erase();
+  void draw(int x, int y, int type);
+  void look(int direction);
+
+ private:
+  unsigned char *_bitmap;
+  unsigned char *_bitmap_glasses;
+  unsigned char *_bitmap_dead;
+  int _locx;
+  int _locy;
+  bool _notdrawn;
+
 };
 
-class Game
-{
-	public:
-		enum action_type {up, down, left, right, flag, open, openNumber, none};
-		LCD5110_SJORS *lcd;
-		Player **player_list;
-		Player *curPlayer;
-		TM1637Display *timer;
+class Game {
+ public:
+  enum action_type { up, down, left, right, flag, open, openNumber, none };
+  LCD5110_SJORS *lcd;
+  Player **player_list;
+  Player *curPlayer;
+  TM1637Display *timer;
 
-		Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer, TM1637Display *timer);
-		virtual action_type get_input() = 0;
-		virtual int handle_input(action_type input) = 0;//int input) = 0;
-		void demoAll();
-
-	private:
-		Player* rotate_list(int dir);
+  Game(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer, TM1637Display *timer);
+  virtual action_type get_input() = 0;
+  virtual int handle_input(action_type input) = 0;//int input) = 0;
+  void demoAll();
+  Player *rotate_list(int dir);
+  static Player *CharacterSelect(Player **player_list);
 };
 
-class MineSweeper: public Game
-{
-	public:
+class MineSweeper : public Game {
+ public:
 
-		MineSweeper(Player **player_list, LCD5110_SJORS* lcd, Player *curPlayer, TM1637Display *timer);
-		Tile** setup();
-		void start();
-		void generate_bombs();
-		void drawCursor();
-		void eraseCursor();
-		void moveCursor(action_type input);
-		bool won();
-		void show_bombs();
-		virtual action_type get_input() override;
-		virtual int handle_input(action_type input) override; //int input) override;
+  MineSweeper(Player **player_list, LCD5110_SJORS *lcd, Player *curPlayer, TM1637Display *timer);
+  Tile **setup();
+  void start();
+  void generate_bombs();
+  void drawCursor();
+  void eraseCursor();
+  void moveCursor(action_type input);
+  bool won();
+  void show_bombs();
+  virtual action_type get_input() override;
+  virtual int handle_input(action_type input) override; //int input) override;
 
-	private:
-		Tile* _curTile;
-		Tile* _field[9][9];
-		int _cursorCol;
-		int _cursorRow;		
+ private:
+  Tile *_curTile;
+  Tile *_field[9][9];
+  int _cursorCol;
+  int _cursorRow;
 };
 
-class Tile
-{
-	public:
-		bool isBomb;
-		bool flag;
-		enum {top, bottom, left, right, topleft, topright, bottomleft, bottomright};
-		enum {died, success};
-		int value;
-		unsigned char* bitmap;	
-		Tile* neighbour[8];
-		LCD5110_SJORS *lcd;		
+class Tile {
+ public:
+  bool isBomb;
+  bool flag;
+  enum { top, bottom, left, right, topleft, topright, bottomleft, bottomright };
+  enum { died, success };
+  int value;
+  unsigned char *bitmap;
+  Tile *neighbour[8];
+  LCD5110_SJORS *lcd;
 
-		Tile(int col, int row, LCD5110_SJORS* lcd);
-		void draw();
-		int bombNeighbours();
-		int open();
-		int open_number();
-		void toggleFlag();
-		void print();
+  Tile(int col, int row, LCD5110_SJORS *lcd);
+  void draw();
+  int bombNeighbours();
+  int open();
+  int open_number();
+  void toggleFlag();
+  void print();
 
-	private:
-		int _col;
-		int _row;
-		
+ private:
+  int _col;
+  int _row;
+
 };
 
-class Button
-{
-	public:
-		enum {one, two, three, four, ok, up, down, left, right};
+class Button {
+ public:
+  enum { one, two, three, four, ok, up, down, left, right };
 };
 
+class LCD5110_SJORS : public LCD5110 {
+ public:
+  using LCD5110::LCD5110;
+  bool getPixel(int x, int y);
+  void getBuffer(int x, int y, uint8_t *bitmap, int sx, int sy);
+  void drawBitmap(int x, int y, uint8_t *bitmap, int sx, int sy);
+  void drawBitmapDynamic(int x, int y, uint8_t *bitmap, int sx, int sy);
+  void setPixel(uint16_t x, uint16_t y);
+  void clrPixel(uint16_t x, uint16_t y);
+  void update();
 
-class LCD5110_SJORS: public LCD5110
-{
-	public:
-		using LCD5110::LCD5110;
-		bool getPixel(int x, int y);
-		void getBuffer(int x, int y, uint8_t* bitmap, int sx, int sy);
-		void drawBitmap(int x, int y, uint8_t* bitmap, int sx, int sy);
-		void drawBitmapDynamic(int x, int y, uint8_t* bitmap, int sx, int sy);
-		void setPixel(uint16_t x, uint16_t y);
-		void clrPixel(uint16_t x, uint16_t y);
-		void update();
+  bool changed = false;
 
-		bool changed = false;
-
-	private:
-		// int8_t LCD5110::getByte(int index);
+ private:
+  // int8_t LCD5110::getByte(int index);
 };
 
-class Process
-{
-	public:
-		virtual bool run() = 0;
-		virtual bool should_run() = 0;
+class Process {
+ public:
+  virtual bool run() = 0;
+  virtual bool should_run() = 0;
 
-	protected:
-		void sleep(int time);
+ protected:
+  void sleep(int time);
 
-		unsigned long next_call_time;
-		int index;
+  unsigned long next_call_time;
+  int index;
 };
 
 // TODO: verdergaan met het implementeren van Animation ofzo.
 
-class Animation: public Process
-{
-	public:
-		virtual bool run() override;
-		virtual bool should_run() override;
+class Animation : public Process {
+ public:
+  virtual bool run() override;
+  virtual bool should_run() override;
 };
 
-class Input: public Process
-{
-	public:
-		Input();
-		virtual bool run() override;
-		virtual bool should_run() override;
-		static bool available;
-		static int button_status[6];
+class Input : public Process {
+ public:
+  Input();
+  virtual bool run() override;
+  virtual bool should_run() override;
+  static bool available;
+  static int button_status[6];
 
-	private:
-		unsigned long buttons_last_pressed[6] = {0, 0, 0, 0, 0, 0};
+ private:
+  unsigned long buttons_last_pressed[6] = {0, 0, 0, 0, 0, 0};
 };
 
-class Audio: public Process
-{
-	public:
-		Audio(int sound, bool loop);
-		virtual bool run() override;
-		virtual bool should_run() override;
-		static void start_music(int song);
-		static void play_sound(int sound);
-		enum {MARIO_MAIN_THEME};
+class Audio : public Process {
+ public:
+  Audio(int sound, bool loop);
+  virtual bool run() override;
+  virtual bool should_run() override;
+  static void start_music(int song);
+  static void play_sound(int sound);
+  enum { MARIO_MAIN_THEME };
 
-	private:
-		int frame;
-		int size;
-		int melody_mem;
-		int tempo_mem;
-		bool loop;
+ private:
+  int frame;
+  int size;
+  int melody_mem;
+  int tempo_mem;
+  bool loop;
 
 };
 
-class Timer: public Process
-{
-	public:
-		Timer(TM1637Display* timer);
-		virtual bool run() override;
-		virtual bool should_run() override;
+class Timer : public Process {
+ public:
+  Timer(TM1637Display *timer);
+  virtual bool run() override;
+  virtual bool should_run() override;
 
-	private:
-		int value;
-		TM1637Display *timer;
+ private:
+  int value;
+  TM1637Display *timer;
 
 };
 
-class Background
-{
-	public:
-		static void run_all();
-		static void add(Process *p);
-		static void remove(int index);
+class Background {
+ public:
+  static void run_all();
+  static void add(Process *p);
+  static void remove(int index);
 
-	private:
-		static Process *process_list[10];	
-		static bool is_active[10];// = {false};
+ private:
+  static Process *process_list[10];
+  static bool is_active[10];// = {false};
 
 };
 
