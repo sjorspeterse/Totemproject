@@ -58,22 +58,120 @@ void setup() {
 	player_list[11] = &Sander;
 	player_list[12] = &Thijs;
 
-  	Background::add(new Input());		// DEZE NOG VERPLAATSEN 
+  	Background::add(new Input());
   	timer.setBrightness(0x0f);
 
 }
 
-void loop() { 
-	// MineSweeper game(player_list, &lcd, &Wiebke, &timer); //
-	// game.demoAll();
+Player & CharacterSelect(Player **player_list);
 
-  	MineSweeper ms = MineSweeper(player_list, &lcd, &Sjors, &timer);
+void loop() {
+  Player &player = CharacterSelect(player_list);
+//  MineSweeper game(player_list, &lcd, &Wiebke, &timer); //
+//  game.demoAll();
+  	MineSweeper ms = MineSweeper(player_list, &lcd, &player, &timer);
   	Serial.println ("Created MineSweeper object!");
   	ms.start();
 }
 
-int free_ram () 
-{
+void RotateLeft(Player **player_list, int char_number);
+void RotateRight(Player **player_list, int char_number);
+
+
+Player & CharacterSelect(Player **player_list) {
+  int char_number = 0;
+  int total_players = 13;
+  int middlelocx = 42 - 17;
+
+  player_list[(char_number + total_players -1)%total_players]->avatar->draw(middlelocx - 36 , -5, Avatar::normal);
+  player_list[(char_number)%total_players]->avatar->draw(middlelocx, 0, Avatar::normal);
+  player_list[(char_number+1)%total_players]->avatar->draw(middlelocx + 36, -5, Avatar::normal);
+  lcd.update();
+
+  while (Input::button_status[OK] != BUTTON_RELEASED_SHORT) {
+    Background::run_all();
+    if (Input::button_status[LEFT] == BUTTON_PRESSED) {
+      RotateLeft(player_list, char_number);
+      char_number = (char_number + total_players - 1) % total_players;
+    }
+
+    if (Input::button_status[RIGHT] == BUTTON_PRESSED) {
+      RotateRight(player_list, char_number);
+      char_number = (char_number + 1) % total_players;
+    }
+    Serial.print("Character is ");
+    Serial.println(player_list[char_number]->naam);
+  }
+  Serial.println("Pressed OK!");
+  Background::run_all();
+  Player &character = *player_list[char_number];
+  return character;
+}
+
+void RotateLeft(Player **player_list, int char_number) {
+  Serial.print("Rotate left, player is ");
+  Serial.println(player_list[char_number]->naam);
+  int acceleratex[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
+  int yoffset[] = {41, 40, 38, 35, 31, 26 ,20, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 8, 11, 15, 20, 26, 31, 35, 38, 40, 41};
+  int middlelocx = 42-17;
+  Avatar *leftmost, *left, *center, *right, *rightmost;
+
+  int p_c = 13; // player count
+
+  middlelocx = 42-17;
+  for(int i = 0; i <11; i++){
+    leftmost = player_list[(char_number + p_c-2)%p_c]->avatar;
+    left = player_list[(char_number + p_c -1)%p_c]->avatar;
+    center = player_list[(char_number)%p_c]->avatar;
+    right = player_list[(char_number+1)%p_c]->avatar;
+    rightmost = player_list[(char_number+2)%p_c]->avatar;
+
+    lcd.clrScr();
+    leftmost->draw(middlelocx - 2 * 36, -yoffset[44 - i], Avatar::normal);
+    left->draw(middlelocx - 36 , -yoffset[33 - i], Avatar::normal); //Left figure
+    center->draw(middlelocx, -yoffset[22 - i], Avatar::normal); //Middle figure
+    right->draw(middlelocx + 36, -yoffset[11 - i], Avatar::normal); //Right figure
+    lcd.update();
+
+    middlelocx += acceleratex[i];
+    delay(30);
+  }
+//  right->action();
+}
+
+void RotateRight(Player **player_list, int char_number) {
+  Serial.print("Rotate right, player is ");
+  Serial.println(player_list[char_number]->naam);
+  int acceleratex[] = {1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1};
+  int yoffset[] = {41, 40, 38, 35, 31, 26 ,20, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 8, 11, 15, 20, 26, 31, 35, 38, 40, 41};
+  int middlelocx = 42-17;
+  Avatar *leftmost, *left, *center, *right, *rightmost;
+
+  int p_c = 13; // player count
+
+  middlelocx = 42-17;
+  for(int i = 0; i <11; i++){
+    leftmost = player_list[(char_number + p_c - 2)%p_c]->avatar;
+    left = player_list[(char_number + p_c -1)%p_c]->avatar;
+    center = player_list[(char_number)%p_c]->avatar;
+    right = player_list[(char_number+1)%p_c]->avatar;
+    rightmost = player_list[(char_number+2)%p_c]->avatar;
+
+    lcd.clrScr();
+    leftmost->draw(middlelocx - 2*36 , -yoffset[44 + i], Avatar::normal); //Left figure
+    left->draw(middlelocx - 36 , -yoffset[33 + i], Avatar::normal); //Left figure
+    center->draw(middlelocx, -yoffset[22 + i], Avatar::normal); //Middle figure
+    right->draw(middlelocx + 36, -yoffset[11 + i], Avatar::normal); //Right figure
+    rightmost->draw(middlelocx + 2*36, -yoffset[i], Avatar::normal); //Rightmost figure
+    lcd.update();
+
+    middlelocx -= acceleratex[i];
+    delay(30);
+  }
+//   right->action();
+}
+
+int free_ram () {
   extern int __heap_start, *__brkval; 
   int v; 
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
