@@ -121,7 +121,7 @@ int MineSweeper::handle_input(action_type input) {
 		case MineSweeper::open:
 			status = _curTile->open();
 			if(status == Tile::success)
-				curPlayer->avatar->action();
+//				curPlayer->avatar->action();
 			break;
 		case MineSweeper::openNumber:
 			if(_curTile->value != UNDISCOVERED)
@@ -174,7 +174,7 @@ void MineSweeper::start() {
 	generate_bombs();
 
 	_curTile->open();
-	curPlayer->avatar->action();
+//	curPlayer->avatar->action();
 
 	// main Minesweeper loop
 	int status = Tile::success;
@@ -237,19 +237,19 @@ void MineSweeper::moveCursor(action_type input) {
 	switch(input) {
 		case MineSweeper::left: 
 			if(_cursorCol > 0) _cursorCol--;
-			curPlayer->avatar->look(EYES_LEFT);
+//			curPlayer->avatar->look(EYES_LEFT);
 			break;
 		case MineSweeper::right: 
 			if(_cursorCol < 8) _cursorCol++;
-			curPlayer->avatar->look(EYES_RIGHT);
+//			curPlayer->avatar->look(EYES_RIGHT);
 			break;
 		case MineSweeper::up: 
 			if(_cursorRow > 0) _cursorRow--;
-			curPlayer->avatar->look(EYES_UP);
+//			curPlayer->avatar->look(EYES_UP);
 			break;
 		case MineSweeper::down: 
 			if(_cursorRow < 8) _cursorRow++;
-			curPlayer->avatar->look(EYES_DOWN);
+//			curPlayer->avatar->look(EYES_DOWN);
 			break;
 		}
 	_curTile = _field[_cursorRow][_cursorCol];

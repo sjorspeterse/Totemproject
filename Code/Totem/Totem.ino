@@ -67,9 +67,8 @@ Player & CharacterSelect(Player **player_list);
 
 void loop() {
   Player &player = CharacterSelect(player_list);
-  MineSweeper game(player_list, &lcd, &Wiebke, &timer); //
-  game.demoAll();
-
+//  MineSweeper game(player_list, &lcd, &Wiebke, &timer); //
+//  game.demoAll();
   	MineSweeper ms = MineSweeper(player_list, &lcd, &player, &timer);
   	Serial.println ("Created MineSweeper object!");
   	ms.start();
@@ -77,10 +76,19 @@ void loop() {
 
 void RotateLeft(Player **player_list, int char_number);
 void RotateRight(Player **player_list, int char_number);
+
+
 Player & CharacterSelect(Player **player_list) {
   int char_number = 0;
   int total_players = 13;
-  while (Input::button_status[OK] != 1) {
+  int middlelocx = 42 - 17;
+
+  player_list[(char_number + total_players -1)%total_players]->avatar->draw(middlelocx - 36 , -5, Avatar::normal);
+  player_list[(char_number)%total_players]->avatar->draw(middlelocx, 0, Avatar::normal);
+  player_list[(char_number+1)%total_players]->avatar->draw(middlelocx + 36, -5, Avatar::normal);
+  lcd.update();
+
+  while (Input::button_status[OK] != BUTTON_RELEASED_SHORT) {
     Background::run_all();
     if (Input::button_status[LEFT] == BUTTON_PRESSED) {
       RotateLeft(player_list, char_number);
@@ -95,8 +103,8 @@ Player & CharacterSelect(Player **player_list) {
     Serial.println(player_list[char_number]->naam);
   }
   Serial.println("Pressed OK!");
+  Background::run_all();
   Player &character = *player_list[char_number];
-  delay(1000);
   return character;
 }
 
